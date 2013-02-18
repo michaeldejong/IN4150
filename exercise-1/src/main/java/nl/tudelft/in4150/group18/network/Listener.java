@@ -6,11 +6,11 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
-class Server<T extends Remote> {
+class Listener<T extends Remote> {
 
 	private final int port;
 
-	public Server(int port, boolean local) {
+	public Listener(int port, boolean local) {
 		this.port = port;
 		
 		if (!local && System.getSecurityManager() == null) {

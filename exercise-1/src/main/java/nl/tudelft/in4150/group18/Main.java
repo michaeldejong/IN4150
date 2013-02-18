@@ -3,8 +3,8 @@ package nl.tudelft.in4150.group18;
 import java.rmi.RemoteException;
 import java.util.Random;
 
-import nl.tudelft.in4150.group18.common.TotalOrdering;
-import nl.tudelft.in4150.group18.common.TotalOrdering_RMI;
+import nl.tudelft.in4150.group18.common.SendableObject;
+import nl.tudelft.in4150.group18.common.IRemoteMethods;
 import nl.tudelft.in4150.group18.network.Node;
 
 import org.slf4j.Logger;
@@ -20,8 +20,8 @@ public class Main {
 	public static void main(String[] args) throws RemoteException {
 		int myPort = selectRandomPort();
 		
-		Node<TotalOrdering_RMI> node = new Node<TotalOrdering_RMI>("localhost", myPort, true);
-		node.start(new TotalOrdering(node));
+		Node<IRemoteMethods> node = new Node<IRemoteMethods>("localhost", myPort, true);
+		node.start(new SendableObject(node));
 
 		while (true) {
 			for (int i = RANGE.lowerEndpoint(); i <= RANGE.upperEndpoint(); i++) {
@@ -30,12 +30,15 @@ public class Main {
 				}
 				
 				try {
-					TotalOrdering_RMI client = node.getClient("localhost", i);
-					log.error(">>> Sending message to\tlocalhost:" + i);
-					client.message(node.getLocalAddress(), "Hello world!");
+					IRemoteMethods sender = node.getSender("localhost", i);
+					log.info(">>> Sending message to\tlocalhost:" + i);
+					
+					// TODO implement random delay
+					sender.message(node.getLocalAddress(), "Hello world!");
 				}
 				catch (RemoteException e) {
 					// Most likely no node running on this port.
+					// TODO after x tries delete sender or suspend sending
 				}
 			}
 		}

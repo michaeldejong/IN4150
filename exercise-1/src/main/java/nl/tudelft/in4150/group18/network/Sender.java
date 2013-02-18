@@ -10,16 +10,19 @@ import java.rmi.RemoteException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-class Client<T extends Remote> {
+class Sender<T extends Remote> {
 
-	private static final Logger log = LoggerFactory.getLogger(Client.class);
+	private static final Logger log = LoggerFactory.getLogger(Sender.class);
 	
+	/**
+	 * IP or hostname
+	 */
 	private final String host;
 	private final int port;
 	
 	private T remote = null;
 	
-	public Client(String host, int port, boolean local) {
+	public Sender(String host, int port, boolean local) {
 		this.host = host;
 		this.port = port;
 		if (!local && System.getSecurityManager() == null) {
