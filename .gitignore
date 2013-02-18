@@ -4,3 +4,14 @@
 *.jar
 *.war
 *.ear
+
+**/target
+
+.project
+.classpath
+
+exercise-1/.project
+exercise-1/.classpath
+exercise-1/.settings/org.eclipse.jdt.core.prefs
+exercise-1/.settings/org.eclipse.m2e.core.prefs
+exercise-1/target/*
