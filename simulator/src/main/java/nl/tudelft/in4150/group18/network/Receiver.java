@@ -7,7 +7,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
 import nl.tudelft.in4150.group18.common.IRemoteObject;
-import nl.tudelft.in4150.group18.common.IRemoteObject.Message;
+import nl.tudelft.in4150.group18.common.IRemoteObject.IMessage;
 
 /**
  * This class is responsible for managing incoming connections.
@@ -16,7 +16,7 @@ import nl.tudelft.in4150.group18.common.IRemoteObject.Message;
  *
  * @param <I>
  */
-class Receiver<I extends Message> {
+class Receiver<I extends IMessage> {
 
 	private final Address address;
 	private Registry registry = null;

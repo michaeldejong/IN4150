@@ -1,58 +1,126 @@
 package nl.tudelft.in4150.group18;
 
 import java.rmi.RemoteException;
+import java.util.Collection;
+import java.util.Queue;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
-import nl.tudelft.in4150.group18.TotalOrdering.Counter;
-import nl.tudelft.in4150.group18.common.IRemoteObject.Message;
+import nl.tudelft.in4150.group18.common.IRemoteObject.IMessage;
 import nl.tudelft.in4150.group18.network.Address;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Queues;
+
 /**
- * This class is a sample implementation of a {@link DistributedAlgorithm}.
+ * This class is implements the Total Ordering algorithm as described in the lectures.
  */
-public class TotalOrdering extends DistributedAlgorithm<Counter> {
+public class TotalOrdering extends DistributedAlgorithmWithAcks<Message, Ack> {
 
 	private static final Logger log = LoggerFactory.getLogger(TotalOrdering.class);
 	
+	private final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
+	private final Object lock = new Object();
+
+	private final Clock clock = new Clock();
+	private final Multimap<MessageIdentifier, Address> receivedAcks = HashMultimap.create();
+	private final Queue<Message> messageQueue = Queues.newLinkedBlockingQueue();
+	private final MessageConsumer messageConsumer;
+	
+	public TotalOrdering(MessageConsumer messageConsumer) {
+		this.messageConsumer = messageConsumer;
+	}
+	
 	@Override
 	public void start() {
-		broadcast(new Counter(1), false);
+		log.info("Starting algorithm...");
+		
+		Runnable broadcaster = new Runnable() {
+			@Override
+			public void run() {
+				Message message = createMessage();
+				log.info("Broadcasting message: {}", message);
+				broadcast(message);
+			}
+		};
+		
+		executor.scheduleWithFixedDelay(broadcaster, 1000, 100, TimeUnit.MILLISECONDS);
 	}
 
 	@Override
-	public void onMessage(Counter message, Address from) {
-		try {
-			Counter reply = new Counter(message.getCounter() + 1);
-			send(reply, from);
+	public void onAcknowledgement(Ack message, Address from) {
+		MessageIdentifier timestamp = message.getTimestamp();
+		log.debug("Received ACK for message with timestamp: {}", timestamp);
+		receivedAcks.put(timestamp, from);
+		
+		checkMessages();
+	}
+
+	@Override
+	public void onMessageReceived(Message message, Address from) {
+		synchronized (lock) {
+			log.debug("Received a Message {} from {} and placed it in the message queue", message, from);
+			messageQueue.add(message);
 			
-			if (reply.getCounter() % 100 == 0) {
-				log.info(getLocalAddress() + " - Processed " + reply.getCounter() + " messages.");
+			log.debug("Broadcasting ACK for message {} to the cluster", message);
+			MessageIdentifier timestamp = message.getTimestamp();
+			broadcast(new Ack(timestamp));
+			
+			clock.updateWithExternalTime(timestamp.getTimestamp());
+			checkMessages();
+		}
+	}
+	
+	@Override
+	public void send(IMessage message, Address address) throws RemoteException {
+		synchronized (lock) {
+			super.send(message, address);
+			clock.increment();
+		}
+	}
+	
+	@Override
+	public void multicast(IMessage message, Collection<Address> addresses) {
+		synchronized (lock) {
+			super.multicast(message, addresses);
+			clock.increment();
+		}
+	}
+	
+	@Override
+	public void broadcast(IMessage message) {
+		synchronized (lock) {
+			super.broadcast(message);
+			clock.increment();
+		}
+	}
+
+	private void checkMessages() {
+		log.debug("Checking if one or more Messages can be delivered...");
+		
+		while (!messageQueue.isEmpty()) {
+			Message message = messageQueue.peek();
+			MessageIdentifier timestamp = message.getTimestamp();
+		
+			if (!entireClusterAcknowledgedMessage(timestamp)) {
+				return;
 			}
-		} 
-		catch (RemoteException e) {
-			log.error(e.getMessage(), e);
+			
+			receivedAcks.removeAll(timestamp);
+			messageConsumer.deliver(messageQueue.poll());
 		}
 	}
 
-	/**
-	 * A simple {@link Message} containing a counter field.
-	 */
-	public static class Counter extends Message {
-
-		private static final long serialVersionUID = 3585089413268308745L;
-		
-		private final int counter;
-		
-		public Counter(int counter) {
-			this.counter = counter;
-		}
-		
-		public int getCounter() {
-			return counter;
-		}
-		
+	private boolean entireClusterAcknowledgedMessage(MessageIdentifier timestamp) {
+		return receivedAcks.get(timestamp).size() == (getRemoteAddresses().size() - 1);
 	}
 
+	private Message createMessage() {
+		return new Message(new MessageIdentifier(clock.getTime(), getLocalAddress()));
+	}
+	
 }

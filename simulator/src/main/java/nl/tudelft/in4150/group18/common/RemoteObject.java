@@ -5,7 +5,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.Set;
 
 import nl.tudelft.in4150.group18.DistributedAlgorithm;
-import nl.tudelft.in4150.group18.common.IRemoteObject.Message;
+import nl.tudelft.in4150.group18.common.IRemoteObject.IMessage;
 import nl.tudelft.in4150.group18.network.Address;
 import nl.tudelft.in4150.group18.network.Node;
 
@@ -17,7 +17,7 @@ import nl.tudelft.in4150.group18.network.Node;
  * @param <M>
  */
 @SuppressWarnings("serial")
-public class RemoteObject<M extends Message> extends UnicastRemoteObject implements IRemoteObject<M> {
+public class RemoteObject<M extends IMessage> extends UnicastRemoteObject implements IRemoteObject<M> {
 
 	private final DistributedAlgorithm<M> algorithm;
 	private final Node<IRemoteObject<M>, M> node;

@@ -11,10 +11,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import nl.tudelft.in4150.group18.common.IRemoteObject;
-import nl.tudelft.in4150.group18.common.IRemoteObject.Message;
+import nl.tudelft.in4150.group18.common.IRemoteObject.IMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Range;
+import com.google.common.collect.Sets;
 
 /**
  * This class contains an internal {@link Receiver} to process messages from remotes, and a collection 
@@ -32,14 +32,13 @@ import com.google.common.collect.Range;
  * @param <I>
  * @param <M>
  */
-public class Node<I extends IRemoteObject<M>, M extends Message> {
+public class Node<I extends IRemoteObject<M>, M extends IMessage> {
 	
 	private static final Range<Integer> PORT_RANGE = Range.closed(1100, 1200);
 	
 	private static final Logger log = LoggerFactory.getLogger(Node.class);
 	private static final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(10);
-	private static final AtomicBoolean holdMessages = new AtomicBoolean(false);
-
+	
 	private final Receiver<M> receiver;
 	private final Map<Address, RemoteNode<I>> remotes;
 	private final boolean localOnly;
@@ -66,24 +65,6 @@ public class Node<I extends IRemoteObject<M>, M extends Message> {
 	}
 	
 	/**
-	 * This method ensures that future messages are not immediately sent, but in stead
-	 * end up in a queue to be sent at a later time, when {@link Node#releaseMessages()} is called.
-	 */
-	public void holdMessages() {
-		holdMessages.set(true);
-		holdMessages.notifyAll();
-	}
-	
-	/**
-	 * This method drains and sends the messages in the queue, and all future messages 
-	 * will be sent immediately in stead of stored in a queue.
-	 */
-	public void releaseMessages() {
-		holdMessages.set(false);
-		holdMessages.notifyAll();
-	}
-	
-	/**
 	 * This method registers the {@link IRemoteObject} with the {@link Node}. In essence this
 	 * method registers the {@link IRemoteObject} to the RMI {@link Registry} for use
 	 * by remotes.
@@ -99,25 +80,18 @@ public class Node<I extends IRemoteObject<M>, M extends Message> {
 	 * @return	A {@link Collection} of {@link Address}es of currently known remotes.
 	 */
 	public Set<Address> listRemoteAddresses() {
-		return Collections.unmodifiableSet(remotes.keySet());
+		Set<Address> keySet = Sets.newHashSet(remotes.keySet());
+		keySet.remove(getLocalAddress());
+		return Collections.unmodifiableSet(keySet);
 	}
 	
 	/**
-	 * This method sends a {@link Message} to the specified {@link Address}.
+	 * This method sends a {@link IMessage} to the specified {@link Address}.
 	 * 
-	 * @param message	The {@link Message} to send.
-	 * @param to		The {@link Address} to send the {@link Message} to.
+	 * @param message	The {@link IMessage} to send.
+	 * @param to		The {@link Address} to send the {@link IMessage} to.
 	 */
 	public void send(final M message, final Address to) {
-		while (holdMessages.get()) {
-			try {
-				holdMessages.wait();
-			} 
-			catch (InterruptedException e) {
-				log.warn(e.getMessage(), e);
-			}
-		}
-		
 		executor.submit(new Runnable() {
 			@Override
 			public void run() {
@@ -133,39 +107,25 @@ public class Node<I extends IRemoteObject<M>, M extends Message> {
 	}
 	
 	/**
-	 * This method sends a {@link Message} to every {@link Address} specified.
+	 * This method sends a {@link IMessage} to every {@link Address} specified.
 	 * 
-	 * @param message	The {@link Message} to send.
-	 * @param to		The {@link Address}es to send the {@link Message} to.
+	 * @param message	The {@link IMessage} to send.
+	 * @param to		The {@link Address}es to send the {@link IMessage} to.
 	 */
 	public void multicast(M message, Collection<Address> to) {
-		multicast(message, to.toArray(new Address[0]));
-	}
-	
-	/**
-	 * This method sends a {@link Message} to every {@link Address} specified.
-	 * 
-	 * @param message	The {@link Message} to send.
-	 * @param to		The {@link Address}es to send the {@link Message} to.
-	 */
-	public void multicast(M message, Address... to) {
 		for (Address address : to) {
 			send(message, address);
 		}
 	}
 	
 	/**
-	 * This method sends a {@link Message} to every {@link Address} specified.
+	 * This method sends a {@link IMessage} to every {@link Address} specified.
 	 * 
-	 * @param message	The {@link Message} to send.
-	 * @param loopback	True if the sender should receive his own {@link Message}, or false otherwise.
+	 * @param message	The {@link IMessage} to send.
 	 */
-	public void broadcast(M message, boolean loopback) {
+	public void broadcast(M message) {
 		List<Address> remoteAddresses = Lists.newArrayList(listRemoteAddresses());
-		if (!loopback) {
-			remoteAddresses.remove(getLocalAddress());
-		}
-		
+		remoteAddresses.remove(getLocalAddress());
 		multicast(message, remoteAddresses);
 	}
 

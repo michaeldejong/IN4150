@@ -4,7 +4,7 @@ import java.rmi.RemoteException;
 import java.util.Collection;
 
 import nl.tudelft.in4150.group18.common.IRemoteObject;
-import nl.tudelft.in4150.group18.common.IRemoteObject.Message;
+import nl.tudelft.in4150.group18.common.IRemoteObject.IMessage;
 import nl.tudelft.in4150.group18.network.Address;
 import nl.tudelft.in4150.group18.network.Node;
 
@@ -17,7 +17,7 @@ import nl.tudelft.in4150.group18.network.Node;
  *
  * @param <M>
  */
-public abstract class DistributedAlgorithm<M extends Message> {
+public abstract class DistributedAlgorithm<M extends IMessage> {
 
 	private Node<IRemoteObject<M>, M> node;
 
@@ -30,10 +30,10 @@ public abstract class DistributedAlgorithm<M extends Message> {
 	public abstract void start();
 	
 	/**
-	 * This method is called upon receiving a new {@link Message} from another remote.
+	 * This method is called upon receiving a new {@link IMessage} from another remote.
 	 * 
-	 * @param message	The received {@link Message}.
-	 * @param from		The {@link Address} of the remote which sent the {@link Message}.
+	 * @param message	The received {@link IMessage}.
+	 * @param from		The {@link Address} of the remote which sent the {@link IMessage}.
 	 */
 	public abstract void onMessage(M message, Address from);
 	
@@ -50,14 +50,14 @@ public abstract class DistributedAlgorithm<M extends Message> {
 	/**
 	 * @return	A {@link Collection} of {@link Address}es of currently known remote processes.
 	 */
-	protected Collection<Address> getRemoteProcesses() {
+	protected Collection<Address> getRemoteAddresses() {
 		return node.listRemoteAddresses();
 	}
 
 	/**
-	 * This method sends a {@link Message} to the specified {@link Address}.
+	 * This method sends a {@link IMessage} to the specified {@link Address}.
 	 * 
-	 * @param content	The {@link Message} to send.
+	 * @param content	The {@link IMessage} to send.
 	 * @param address	The {@link Address} to send it to.
 	 * 
 	 * @throws RemoteException	In case we could not message specified remote.
@@ -67,19 +67,9 @@ public abstract class DistributedAlgorithm<M extends Message> {
 	}
 	
 	/**
-	 * This method sends a {@link Message} to multiple remotes.
+	 * This method sends a {@link IMessage} to multiple remotes.
 	 * 
-	 * @param content	The {@link Message} to send.
-	 * @param addresses	The {@link Address}es to send it to.
-	 */
-	protected void multicast(M content, Address... addresses) {
-		node.multicast(content, addresses);
-	}
-	
-	/**
-	 * This method sends a {@link Message} to multiple remotes.
-	 * 
-	 * @param content	The {@link Message} to send.
+	 * @param content	The {@link IMessage} to send.
 	 * @param addresses	The {@link Address}es to send it to.
 	 */
 	protected void multicast(M content, Collection<Address> addresses) {
@@ -87,14 +77,12 @@ public abstract class DistributedAlgorithm<M extends Message> {
 	}
 
 	/**
-	 * This method sends a {@link Message} to all known remotes.
+	 * This method sends a {@link IMessage} to all known remotes.
 	 * 
-	 * @param content	The {@link Message} to send.
-	 * @param loopback	True if you want the sender to receive its own {@link Message} or 
-	 * 					false if you don't want the sender to receive its own {@link Message}.
+	 * @param content	The {@link IMessage} to send.
 	 */
-	protected void broadcast(M content, boolean loopback) {
-		node.broadcast(content, loopback);
+	protected void broadcast(M content) {
+		node.broadcast(content);
 	}
 
 	/**

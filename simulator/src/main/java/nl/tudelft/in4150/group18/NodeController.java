@@ -6,7 +6,7 @@ import java.rmi.RemoteException;
 import java.util.Collection;
 
 import nl.tudelft.in4150.group18.common.IRemoteObject;
-import nl.tudelft.in4150.group18.common.IRemoteObject.Message;
+import nl.tudelft.in4150.group18.common.IRemoteObject.IMessage;
 import nl.tudelft.in4150.group18.common.RemoteObject;
 import nl.tudelft.in4150.group18.network.Address;
 import nl.tudelft.in4150.group18.network.Node;
@@ -18,7 +18,7 @@ import nl.tudelft.in4150.group18.network.Node;
  * @author michael
  * @param <M>
  */
-public class NodeController<M extends Message> {
+public class NodeController<M extends IMessage> {
 	
 	private final Node<IRemoteObject<M>, M> node;
 	private final DistributedAlgorithm<M> algorithm;
@@ -46,22 +46,6 @@ public class NodeController<M extends Message> {
 		algorithm.start();
 	}
 	
-	/**
-	 * When you call this method, all future messages will be not be directly sent.
-	 * Once you call {@link NodeController#releaseMessages()} these messages will be sent.
-	 */
-	public void holdMessages() {
-		node.holdMessages();
-	}
-	
-	/**
-	 * When you call this method, all pending outgoing messages are sent, and future
-	 * messages will immediately be sent and not be stored in a queue.
-	 */
-	public void releaseMessages() {
-		node.releaseMessages();
-	}
-
 	/**
 	 * When you call this method, the {@link NodeController} will attempt to locate other remotes in the cluster.
 	 */

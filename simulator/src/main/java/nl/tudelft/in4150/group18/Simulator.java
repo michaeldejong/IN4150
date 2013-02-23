@@ -13,14 +13,17 @@ import nl.tudelft.in4150.group18.ui.NetworkInterfaceChooserDialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class Simulator {
+public class Simulator {
 	
 	private static final Logger log = LoggerFactory.getLogger(Simulator.class);
+	
+	private Simulator() {
+		// Prevent instantiation.
+	}
 
-	public void start(String[] args) throws IOException {
+	public static void start(DistributedAlgorithm<?> algorithm, String[] args) throws IOException {
 		boolean isLocal = containsParam(args, "--local");
 		boolean missingAdditionalParams = !isLocal && !containsParam(args, "--interface");
-		DistributedAlgorithm<?> algorithm = getAlgorithm();
 		
 		if (containsParam(args, "--ui")) { 
 			if (missingAdditionalParams) {
@@ -53,7 +56,7 @@ public abstract class Simulator {
 	 * @throws SocketException	In case we couldn't retrieve all the required network information to
 	 * 							form the cluster.
 	 */
-	private void promptConfigDialog(final DistributedAlgorithm<?> algorithm) throws SocketException {
+	private static void promptConfigDialog(final DistributedAlgorithm<?> algorithm) throws SocketException {
 		new NetworkInterfaceChooserDialog(new NetworkInterfaceChooserDialog.Callback() {
 			@Override
 			public void onSelect(boolean local, String networkInterface) {
@@ -79,7 +82,7 @@ public abstract class Simulator {
 	 * @return				The {@link InetAddress} to use for communication.
 	 * @throws IOException	If we couldn't retrieve network information.
 	 */
-	private InetAddress getHostAddress(boolean isLocal, String[] params) throws IOException {
+	private static InetAddress getHostAddress(boolean isLocal, String[] params) throws IOException {
 		if (containsParam(params, "--local")) {
 			return InetAddress.getLocalHost();
 		}
@@ -95,7 +98,7 @@ public abstract class Simulator {
 	 * @return					The local {@link InetAddress} of the specified {@link NetworkInterface}. 
 	 * @throws SocketException	If there were problems with retrieving information from the {@link NetworkInterface}.
 	 */
-	private InetAddress getHostAddressFromInterface(String interfaceName) throws SocketException {
+	private static InetAddress getHostAddressFromInterface(String interfaceName) throws SocketException {
 		Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
 		while (networkInterfaces.hasMoreElements()) {
 			NetworkInterface networkInterface = networkInterfaces.nextElement();
@@ -122,7 +125,7 @@ public abstract class Simulator {
 	 * @param needle	The needle to look for in the array of parameters.
 	 * @return			True if the needle occurs in the array or false otherwise.
 	 */
-	private boolean containsParam(String[] params, String needle) {
+	private static boolean containsParam(String[] params, String needle) {
 		return findParam(params, needle) >= 0;
 	}
 	
@@ -134,7 +137,7 @@ public abstract class Simulator {
 	 * @return			The index of the needle in the array of parameters. This method 
 	 * 					will return -1 if the needle does not occur in the parameters.
 	 */
-	private int findParam(String[] params, String needle) {
+	private static int findParam(String[] params, String needle) {
 		for (int i = 0; i < params.length; i++) {
 			if (params[i].equalsIgnoreCase(needle)) {
 				return i;
@@ -142,7 +145,5 @@ public abstract class Simulator {
 		}
 		return -1;
 	}
-	
-	abstract DistributedAlgorithm<?> getAlgorithm();
 	
 }
