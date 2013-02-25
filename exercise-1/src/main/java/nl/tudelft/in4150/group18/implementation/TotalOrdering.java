@@ -3,6 +3,7 @@ package nl.tudelft.in4150.group18.implementation;
 import java.rmi.RemoteException;
 import java.util.Collection;
 import java.util.Queue;
+import java.util.Random;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -47,10 +48,13 @@ public class TotalOrdering extends DistributedAlgorithmWithAcks<Message, Ack> {
 				Message message = createMessage();
 				log.info("Broadcasting message: {}", message);
 				broadcast(message);
+				
+				int randomDelay = new Random().nextInt(100);
+				executor.schedule(this, randomDelay, TimeUnit.MILLISECONDS);
 			}
 		};
 		
-		executor.scheduleWithFixedDelay(broadcaster, 1000, 100, TimeUnit.MILLISECONDS);
+		executor.submit(broadcaster);
 	}
 
 	@Override
