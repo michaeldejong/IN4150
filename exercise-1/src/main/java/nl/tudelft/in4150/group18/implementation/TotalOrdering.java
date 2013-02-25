@@ -64,9 +64,9 @@ public class TotalOrdering extends DistributedAlgorithmWithAcks<Message, Ack> {
 	@Override
 	protected void onAcknowledgement(Ack message, Address from) {
 		synchronized (lock) {
-			MessageIdentifier timestamp = message.getId();
-			log.debug(getLocalAddress() + " - Received ACK for message with timestamp: {}", timestamp);
-			receivedAcks.put(timestamp, from);
+			MessageIdentifier messageId = message.getId();
+			log.debug(getLocalAddress() + " - Received ACK for message with id: {}", messageId);
+			receivedAcks.put(messageId, from);
 	
 			checkMessages();
 		}
@@ -86,10 +86,10 @@ public class TotalOrdering extends DistributedAlgorithmWithAcks<Message, Ack> {
 			}
 
 			log.debug(getLocalAddress() + " - Broadcasting ACK for message {} to the cluster", message);
-			MessageIdentifier timestamp = message.getId();
-			broadcast(new Ack(timestamp));
+			MessageIdentifier messageId = message.getId();
+			broadcast(new Ack(messageId));
 
-			clock.updateWithExternalTime(timestamp.getTimestamp());
+			clock.updateWithExternalTime(messageId.getTimestamp());
 			checkMessages();
 		}
 	}
@@ -129,6 +129,7 @@ public class TotalOrdering extends DistributedAlgorithmWithAcks<Message, Ack> {
 			MessageIdentifier messageId = message.getId();
 
 			if (!entireClusterAcknowledgedMessage(messageId)) {
+				log.debug(getLocalAddress() + " - Missing one or more ACKs for messageId: {}", messageId);
 				return;
 			}
 
@@ -136,10 +137,12 @@ public class TotalOrdering extends DistributedAlgorithmWithAcks<Message, Ack> {
 			messageConsumer.deliver(messageQueue.poll());
 			log.info(getLocalAddress() + " - Delivered message {} internally", message);
 		}
+		
+		log.debug(getLocalAddress() + " - Queue for messages is empty!");
 	}
 
-	private boolean entireClusterAcknowledgedMessage(MessageIdentifier timestamp) {
-		return receivedAcks.get(timestamp).size() == (getRemoteAddresses().size() - 1);
+	private boolean entireClusterAcknowledgedMessage(MessageIdentifier messageId) {
+		return receivedAcks.get(messageId).size() == (getRemoteAddresses().size() - 1);
 	}
 
 	private Message createMessage() {

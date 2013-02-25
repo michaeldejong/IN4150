@@ -43,7 +43,7 @@ public class AlgorithmTest {
 	/**
 	 * Test to see if the message received has the same id as the message that was sent.
 	 */
-	@Test
+	@Test(timeout = 30000)
 	public void testSingleBroadcast() {
 		algorithm1.broadcast(new Message(new MessageIdentifier(0, controller1.getLocalAddress())));
 		while (consumer2.numberOfMessagesDelivered() < 1 || consumer3.numberOfMessagesDelivered() < 1) {
@@ -58,7 +58,7 @@ public class AlgorithmTest {
 	 * Test the holding of message to send
 	 * @throws InterruptedException if sleep is interrupted
 	 */
-	@Test
+	@Test(timeout = 30000)
 	public void testHoldingAndReleasingMessages() throws InterruptedException {
 		controller1.holdMessagesToSend();
 		algorithm1.broadcast(new Message(new MessageIdentifier(0, controller1.getLocalAddress())));
@@ -82,14 +82,15 @@ public class AlgorithmTest {
 	/**
 	 * Test sending from all nodes to all nodes at the same time
 	 */
-	@Test
+	@Test(timeout = 30000)
 	public void testMessageOrdering() {
-		algorithm1.broadcast(new Message(new MessageIdentifier(1, controller1.getLocalAddress()))); // sends to 2 nodes
-		algorithm2.broadcast(new Message(new MessageIdentifier(1, controller2.getLocalAddress()))); // sends to 2 nodes
 		algorithm3.broadcast(new Message(new MessageIdentifier(1, controller3.getLocalAddress()))); // sends to 2 nodes
+		algorithm2.broadcast(new Message(new MessageIdentifier(1, controller2.getLocalAddress()))); // sends to 2 nodes
+		algorithm1.broadcast(new Message(new MessageIdentifier(1, controller1.getLocalAddress()))); // sends to 2 nodes
 
-		while (consumer1.numberOfMessagesDelivered() < 2 || consumer2.numberOfMessagesDelivered() < 2
-				|| consumer3.numberOfMessagesDelivered() < 2) { // throws time out exception after default 30 sec
+		while (consumer1.numberOfMessagesDelivered() < 2 
+			|| consumer2.numberOfMessagesDelivered() < 2
+			|| consumer3.numberOfMessagesDelivered() < 2) { 
 			// Busy wait, while we wait for all consumers to receive all messages.
 		}
 
