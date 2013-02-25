@@ -10,40 +10,47 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Lists;
 
-
+/**
+ * Receives messages after delivery
+ */
 public class MessageConsumer {
 
 	private static final Logger log = LoggerFactory.getLogger(MessageConsumer.class);
-	
+
 	private final List<Message> receivedMessages = Lists.newArrayList();
 	private final AtomicLong lastReceivedTimestamp = new AtomicLong(-1);
 	private final AtomicBoolean receivedAllMessagesInOrder = new AtomicBoolean(true);
-	
+
 	private final Object lock = new Object();
-	
+
+	/**
+	 * Checks validity of messages that are delivered
+	 * @param message
+	 */
 	public void deliver(Message message) {
 		log.info("Delivered message: {}", message);
 		synchronized (lock) {
-			MessageIdentifier timestamp = message.getTimestamp();
+			MessageIdentifier timestamp = message.getId();
 			if (timestamp.getTimestamp() < lastReceivedTimestamp.get()) {
-				log.error("Received unexpected Message: " + message + " <-> Last received timestamp: " + lastReceivedTimestamp);
+				log.error("Received unexpected Message: " + message + " <-> Last received timestamp: "
+						+ lastReceivedTimestamp);
 				receivedAllMessagesInOrder.set(false);
 				throw new MessageDeliveredOutOfOrderException("Received message: " + message.getTimestamp() + ", but expected: " + lastReceivedTimestamp);
 			}
-			
+
 			lastReceivedTimestamp.set(timestamp.getTimestamp());
 			receivedMessages.add(message);
 		}
 	}
-	
+
 	public boolean receivedAllMessagesInOrder() {
 		synchronized (lock) {
 			return receivedAllMessagesInOrder.get();
 		}
 	}
-	
+
 	public List<Message> getReceivedMessages() {
 		return Collections.unmodifiableList(receivedMessages);
 	}
-	
+
 }

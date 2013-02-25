@@ -9,33 +9,33 @@ public class Message implements IMessage {
 
 	private static final long serialVersionUID = 3585089413268308745L;
 	
-	private final MessageIdentifier timestamp;
+	private final MessageIdentifier messageId;
 	
-	public Message(MessageIdentifier timestamp) {
-		this.timestamp = timestamp;
+	public Message(MessageIdentifier id) {
+		this.messageId = id;
 	}
 	
-	public MessageIdentifier getTimestamp() {
-		return timestamp;
+	public MessageIdentifier getId() {
+		return messageId;
 	}
 	
 	@Override
 	public int hashCode() {
-		return timestamp.hashCode();
+		return messageId.hashCode();
 	}
 	
 	@Override
 	public boolean equals(Object other) {
 		if (other instanceof Message) {
 			Message o = (Message) other;
-			return timestamp.equals(o.timestamp);
+			return messageId.equals(o.messageId);
 		}
 		return false;
 	}
 	
 	@Override
 	public String toString() {
-		return "[" + timestamp + "]";
+		return "[" + messageId + "]";
 	}
 	
 }

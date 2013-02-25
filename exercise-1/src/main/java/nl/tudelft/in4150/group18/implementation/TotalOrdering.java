@@ -59,7 +59,7 @@ public class TotalOrdering extends DistributedAlgorithmWithAcks<Message, Ack> {
 
 	@Override
 	protected void onAcknowledgement(Ack message, Address from) {
-		MessageIdentifier timestamp = message.getTimestamp();
+		MessageIdentifier timestamp = message.getId();
 		log.debug("Received ACK for message with timestamp: {}", timestamp);
 		receivedAcks.put(timestamp, from);
 		
@@ -73,7 +73,7 @@ public class TotalOrdering extends DistributedAlgorithmWithAcks<Message, Ack> {
 			messageQueue.add(message);
 			
 			log.debug("Broadcasting ACK for message {} to the cluster", message);
-			MessageIdentifier timestamp = message.getTimestamp();
+			MessageIdentifier timestamp = message.getId();
 			broadcast(new Ack(timestamp));
 			
 			clock.updateWithExternalTime(timestamp.getTimestamp());
@@ -110,7 +110,7 @@ public class TotalOrdering extends DistributedAlgorithmWithAcks<Message, Ack> {
 		
 		while (!messageQueue.isEmpty()) {
 			Message message = messageQueue.peek();
-			MessageIdentifier timestamp = message.getTimestamp();
+			MessageIdentifier timestamp = message.getId();
 		
 			if (!entireClusterAcknowledgedMessage(timestamp)) {
 				return;

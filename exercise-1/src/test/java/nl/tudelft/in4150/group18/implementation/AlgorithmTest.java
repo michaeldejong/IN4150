@@ -50,8 +50,8 @@ public class AlgorithmTest {
 			// Busy wait, while we wait for both consumers to receive the message.
 		}
 		
-		Assert.assertEquals(0, consumer2.getReceivedMessages().get(0).getTimestamp().getTimestamp());
-		Assert.assertEquals(0, consumer3.getReceivedMessages().get(0).getTimestamp().getTimestamp());
+		Assert.assertEquals(0, consumer2.getReceivedMessages().get(0).getId().getTimestamp());
+		Assert.assertEquals(0, consumer3.getReceivedMessages().get(0).getId().getTimestamp());
 	}
 	
 	@Test
@@ -71,8 +71,8 @@ public class AlgorithmTest {
 			// Busy wait, while we wait for both consumers to receive the message.
 		}
 		
-		Assert.assertEquals(0, consumer2.getReceivedMessages().get(0).getTimestamp().getTimestamp());
-		Assert.assertEquals(0, consumer3.getReceivedMessages().get(0).getTimestamp().getTimestamp());
+		Assert.assertEquals(0, consumer2.getReceivedMessages().get(0).getId().getTimestamp());
+		Assert.assertEquals(0, consumer3.getReceivedMessages().get(0).getId().getTimestamp());
 	}
 
 	private int numberOfMessages(MessageConsumer consumer) {
