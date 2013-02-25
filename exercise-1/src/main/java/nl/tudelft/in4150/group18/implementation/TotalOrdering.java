@@ -35,7 +35,7 @@ public class TotalOrdering extends DistributedAlgorithmWithAcks<Message, Ack> {
 	/**
 	 * Incoming message queue
 	 */
-	private final Queue<Message> messageQueue = Queues.newLinkedBlockingQueue();
+	private final Queue<Message> messageQueue = Queues.newPriorityQueue();
 	private final MessageConsumer messageConsumer;
 
 	public TotalOrdering(MessageConsumer messageConsumer) {

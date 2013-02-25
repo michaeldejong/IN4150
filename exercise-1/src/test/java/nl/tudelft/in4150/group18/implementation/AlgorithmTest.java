@@ -79,4 +79,31 @@ public class AlgorithmTest {
 		Assert.assertEquals(0, consumer3.getReceivedMessages().get(0).getId().getTimestamp());
 	}
 
+	/**
+	 * Test sending from all nodes to all nodes at the same time
+	 */
+	@Test
+	public void testMessageOrdering() {
+		algorithm1.broadcast(new Message(new MessageIdentifier(1, controller1.getLocalAddress()))); // sends to 2 nodes
+		algorithm2.broadcast(new Message(new MessageIdentifier(1, controller2.getLocalAddress()))); // sends to 2 nodes
+		algorithm3.broadcast(new Message(new MessageIdentifier(1, controller3.getLocalAddress()))); // sends to 2 nodes
+
+		while (consumer1.numberOfMessagesDelivered() < 2 || consumer2.numberOfMessagesDelivered() < 2
+				|| consumer3.numberOfMessagesDelivered() < 2) { // throws time out exception after default 30 sec
+			// Busy wait, while we wait for all consumers to receive all messages.
+		}
+
+		// Controller 1 received from 2 and then 3
+		Assert.assertEquals(controller2.getLocalAddress(), consumer1.getReceivedMessages().get(0).getId().getAddress());
+		Assert.assertEquals(controller3.getLocalAddress(), consumer1.getReceivedMessages().get(1).getId().getAddress());
+
+		// Controller 2 received from 1 and then 3
+		Assert.assertEquals(controller1.getLocalAddress(), consumer2.getReceivedMessages().get(0).getId().getAddress());
+		Assert.assertEquals(controller3.getLocalAddress(), consumer2.getReceivedMessages().get(1).getId().getAddress());
+
+		// Controller 3 received from 1 and then 2
+		Assert.assertEquals(controller1.getLocalAddress(), consumer3.getReceivedMessages().get(0).getId().getAddress());
+		Assert.assertEquals(controller2.getLocalAddress(), consumer3.getReceivedMessages().get(1).getId().getAddress());
+	}
+
 }
