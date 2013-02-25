@@ -1,4 +1,4 @@
-package nl.tudelft.in4150.group18;
+package nl.tudelft.in4150.group18.implementation;
 
 import java.rmi.RemoteException;
 import java.util.Collection;
@@ -6,6 +6,7 @@ import java.util.Queue;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import nl.tudelft.in4150.group18.DistributedAlgorithmWithAcks;
 import nl.tudelft.in4150.group18.common.IRemoteObject.IMessage;
 import nl.tudelft.in4150.group18.network.Address;
 
@@ -52,7 +53,7 @@ public class TotalOrdering extends DistributedAlgorithmWithAcks<Message, Ack> {
 	}
 
 	@Override
-	public void onAcknowledgement(Ack message, Address from) {
+	protected void onAcknowledgement(Ack message, Address from) {
 		MessageIdentifier timestamp = message.getTimestamp();
 		log.debug("Received ACK for message with timestamp: {}", timestamp);
 		receivedAcks.put(timestamp, from);
@@ -61,7 +62,7 @@ public class TotalOrdering extends DistributedAlgorithmWithAcks<Message, Ack> {
 	}
 
 	@Override
-	public void onMessageReceived(Message message, Address from) {
+	protected void onMessageReceived(Message message, Address from) {
 		synchronized (lock) {
 			log.debug("Received a Message {} from {} and placed it in the message queue", message, from);
 			messageQueue.add(message);
@@ -76,7 +77,7 @@ public class TotalOrdering extends DistributedAlgorithmWithAcks<Message, Ack> {
 	}
 	
 	@Override
-	public void send(IMessage message, Address address) throws RemoteException {
+	protected void send(IMessage message, Address address) throws RemoteException {
 		synchronized (lock) {
 			super.send(message, address);
 			clock.increment();
@@ -84,7 +85,7 @@ public class TotalOrdering extends DistributedAlgorithmWithAcks<Message, Ack> {
 	}
 	
 	@Override
-	public void multicast(IMessage message, Collection<Address> addresses) {
+	protected void multicast(IMessage message, Collection<Address> addresses) {
 		synchronized (lock) {
 			super.multicast(message, addresses);
 			clock.increment();
@@ -92,7 +93,7 @@ public class TotalOrdering extends DistributedAlgorithmWithAcks<Message, Ack> {
 	}
 	
 	@Override
-	public void broadcast(IMessage message) {
+	protected void broadcast(IMessage message) {
 		synchronized (lock) {
 			super.broadcast(message);
 			clock.increment();

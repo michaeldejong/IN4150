@@ -26,8 +26,8 @@ public abstract class DistributedAlgorithmWithAcks<M extends IMessage, A extends
 		onMessageReceived((M) message, from);
 	}
 	
-	public abstract void onAcknowledgement(A message, Address from);
+	protected abstract void onAcknowledgement(A message, Address from);
 	
-	public abstract void onMessageReceived(M message, Address from);
+	protected abstract void onMessageReceived(M message, Address from);
 	
 }

@@ -1,9 +1,14 @@
-package nl.tudelft.in4150.group18;
+package nl.tudelft.in4150.group18.implementation;
 
 import java.io.IOException;
 import java.net.InetAddress;
 
+import nl.tudelft.in4150.group18.NodeController;
 import nl.tudelft.in4150.group18.common.IRemoteObject.IMessage;
+import nl.tudelft.in4150.group18.implementation.Message;
+import nl.tudelft.in4150.group18.implementation.MessageConsumer;
+import nl.tudelft.in4150.group18.implementation.MessageIdentifier;
+import nl.tudelft.in4150.group18.implementation.TotalOrdering;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -41,12 +46,37 @@ public class AlgorithmTest {
 	@Test
 	public void testSingleBroadcast() {
 		algorithm1.broadcast(new Message(new MessageIdentifier(0, controller1.getLocalAddress())));
-		while (consumer2.getReceivedMessages().size() < 1 || consumer3.getReceivedMessages().size() < 1) {
+		while (numberOfMessages(consumer2) < 1 || numberOfMessages(consumer3) < 1) {
 			// Busy wait, while we wait for both consumers to receive the message.
 		}
 		
 		Assert.assertEquals(0, consumer2.getReceivedMessages().get(0).getTimestamp().getTimestamp());
 		Assert.assertEquals(0, consumer3.getReceivedMessages().get(0).getTimestamp().getTimestamp());
+	}
+	
+	@Test
+	public void testHoldingAndReleasingMessages() throws InterruptedException {
+		controller1.holdMessages();
+		algorithm1.broadcast(new Message(new MessageIdentifier(0, controller1.getLocalAddress())));
+
+		Thread.sleep(2000);
+		
+		if (numberOfMessages(consumer2) >= 1 || numberOfMessages(consumer3) >= 1) {
+			throw new IllegalStateException("Received messages while they should be held");
+		}
+		
+		controller1.releaseMessages();
+		
+		while (numberOfMessages(consumer2) < 1 || numberOfMessages(consumer3) < 1) {
+			// Busy wait, while we wait for both consumers to receive the message.
+		}
+		
+		Assert.assertEquals(0, consumer2.getReceivedMessages().get(0).getTimestamp().getTimestamp());
+		Assert.assertEquals(0, consumer3.getReceivedMessages().get(0).getTimestamp().getTimestamp());
+	}
+
+	private int numberOfMessages(MessageConsumer consumer) {
+		return consumer.getReceivedMessages().size();
 	}
 	
 }

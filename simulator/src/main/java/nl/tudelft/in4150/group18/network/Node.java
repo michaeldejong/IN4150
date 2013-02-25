@@ -35,14 +35,17 @@ import com.google.common.collect.Sets;
 public class Node<I extends IRemoteObject<M>, M extends IMessage> {
 	
 	private static final Range<Integer> PORT_RANGE = Range.closed(1100, 1200);
-	
 	private static final Logger log = LoggerFactory.getLogger(Node.class);
-	private static final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(10);
+	
+	private final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
 	
 	private final Receiver<M> receiver;
 	private final Map<Address, RemoteNode<I>> remotes;
 	private final boolean localOnly;
 	private final InetAddress address;
+	
+	private final Object notifier = new Object();
+	private volatile boolean holdMessages = false;
 	
 	/**
 	 * This constructs a new {@link Node} object.
@@ -84,6 +87,33 @@ public class Node<I extends IRemoteObject<M>, M extends IMessage> {
 		keySet.remove(getLocalAddress());
 		return Collections.unmodifiableSet(keySet);
 	}
+
+	/**
+	 * Calling this message will cause this {@link Node} to queue 
+	 * the messages to send, and not send them to their destinations.
+	 * 
+	 * To release these {@link IMessage}s again, see {@link Node#releaseMessages()}.
+	 */
+	public void holdMessages() {
+		synchronized (notifier) {
+			holdMessages = true;
+			notifier.notifyAll();
+		}
+	}
+	
+	/**
+	 * Calling this message will cause this {@link Node} to flush 
+	 * its buffer of messages to their respective destinations. Additionally
+	 * new {@link IMessage} will be allowed to be sent immediately.
+	 * 
+	 * Also see {@link Node#holdMessages()}.
+	 */
+	public void releaseMessages() {
+		synchronized (notifier) {
+			holdMessages = false;
+			notifier.notifyAll();
+		}
+	}
 	
 	/**
 	 * This method sends a {@link IMessage} to the specified {@link Address}.
@@ -95,12 +125,27 @@ public class Node<I extends IRemoteObject<M>, M extends IMessage> {
 		executor.submit(new Runnable() {
 			@Override
 			public void run() {
+				waitUntilAllowedToSend();
+				
 				try {
 					log.debug("Sending message: {} to: {}", message, to);
 					getRemote(to).onMessage(message, getLocalAddress());
 				}
 				catch (RemoteException e) {
+					log.warn("Remote doesn't seem to be online anymore.", e);
 					remotes.remove(to);
+				}
+			}
+
+			private void waitUntilAllowedToSend() {
+				while (holdMessages) {
+					try {
+						synchronized (notifier) {
+							notifier.wait();
+						}
+					} catch (InterruptedException e) {
+						log.warn("Was interrupted while waiting for messages to be released.", e);
+					}
 				}
 			}
 		});

@@ -68,6 +68,27 @@ public class NodeController<M extends IMessage> {
 	}
 
 	/**
+	 * Calling this message will cause this {@link NodeController} to queue 
+	 * the messages to send, and not send them to their destinations.
+	 * 
+	 * To release these {@link IMessage}s again, see {@link NodeController#releaseMessages()}.
+	 */
+	public void holdMessages() {
+		node.holdMessages();
+	}
+	
+	/**
+	 * Calling this message will cause this {@link NodeController} to flush 
+	 * its buffer of messages to their respective destinations. Additionally
+	 * new {@link IMessage} will be allowed to be sent immediately.
+	 * 
+	 * Also see {@link NodeController#holdMessages()}.
+	 */
+	public void releaseMessages() {
+		node.releaseMessages();
+	}
+
+	/**
 	 * This method allows you to add a remote manually.
 	 * 
 	 * @param address			The {@link Address} of the remote you want to add.

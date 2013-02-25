@@ -1,17 +1,14 @@
-package nl.tudelft.in4150.group18;
+package nl.tudelft.in4150.group18.implementation;
 
-import nl.tudelft.in4150.group18.common.IRemoteObject.IMessage;
+import nl.tudelft.in4150.group18.IAck;
 
-/**
- * A simple {@link IMessage} containing a counter field.
- */
-public class Message implements IMessage {
+public class Ack implements IAck {
 
-	private static final long serialVersionUID = 3585089413268308745L;
+	private static final long serialVersionUID = 1515323396408435666L;
 	
 	private final MessageIdentifier timestamp;
 	
-	public Message(MessageIdentifier timestamp) {
+	public Ack(MessageIdentifier timestamp) {
 		this.timestamp = timestamp;
 	}
 	
@@ -26,8 +23,8 @@ public class Message implements IMessage {
 	
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof Message) {
-			Message o = (Message) other;
+		if (other instanceof Ack) {
+			Ack o = (Ack) other;
 			return timestamp.equals(o.timestamp);
 		}
 		return false;
@@ -37,5 +34,5 @@ public class Message implements IMessage {
 	public String toString() {
 		return "[" + timestamp + "]";
 	}
-	
+
 }
