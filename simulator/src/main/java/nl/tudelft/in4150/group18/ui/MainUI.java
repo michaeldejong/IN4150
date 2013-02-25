@@ -39,7 +39,7 @@ public class MainUI extends JFrame {
 	private final JTextArea remotesPanel;
 	
 	public MainUI(boolean localOnly, InetAddress localAddress, DistributedAlgorithm<?> algorithm) throws IOException {
-		setTitle("IN4150: Distributed algorithms - exercise 1");
+		setTitle("IN4150: Distributed algorithms - Group 18");
 		setSize(500, 400);
 		setLocation(100, 100);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

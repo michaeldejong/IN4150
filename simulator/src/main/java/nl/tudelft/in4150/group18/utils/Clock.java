@@ -1,4 +1,4 @@
-package nl.tudelft.in4150.group18.implementation;
+package nl.tudelft.in4150.group18.utils;
 
 
 public class Clock {
