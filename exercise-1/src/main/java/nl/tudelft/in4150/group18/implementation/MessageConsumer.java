@@ -29,7 +29,6 @@ public class MessageConsumer {
 	 * @throws message delivered out of order exception (should never occur -> runtime exception)
 	 */
 	public void deliver(Message message) {
-		log.info("Delivered message: {}", message);
 		synchronized (lock) {
 			MessageIdentifier timestamp = message.getId();
 			if (timestamp.getTimestamp() < lastReceivedTimestamp.get()) {

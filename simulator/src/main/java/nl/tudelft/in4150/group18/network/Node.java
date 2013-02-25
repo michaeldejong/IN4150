@@ -7,7 +7,6 @@ import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -18,10 +17,8 @@ import nl.tudelft.in4150.group18.common.IRemoteObject.IMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Range;
-import com.google.common.collect.Sets;
 
 /**
  * This class contains an internal {@link Receiver} to process messages from remotes, and a collection 
@@ -83,9 +80,7 @@ public class Node<I extends IRemoteObject<M>, M extends IMessage> {
 	 * @return	A {@link Collection} of {@link Address}es of currently known remotes.
 	 */
 	public Set<Address> listRemoteAddresses() {
-		Set<Address> keySet = Sets.newHashSet(remotes.keySet());
-		keySet.remove(getLocalAddress());
-		return Collections.unmodifiableSet(keySet);
+		return Collections.unmodifiableSet(remotes.keySet());
 	}
 
 	/**
@@ -128,11 +123,11 @@ public class Node<I extends IRemoteObject<M>, M extends IMessage> {
 				waitUntilAllowedToSend();
 				
 				try {
-					log.debug("Sending message: {} to: {}", message, to);
+					log.debug(getLocalAddress() + " - Sending {}: {} to: {}", message.getClass().getSimpleName(), message, to);
 					getRemote(to).onMessage(message, getLocalAddress());
 				}
 				catch (RemoteException e) {
-					log.warn("Remote doesn't seem to be online anymore.", e);
+					log.warn(getLocalAddress() + " - Remote doesn't seem to be online anymore.", e);
 					remotes.remove(to);
 				}
 			}
@@ -144,7 +139,7 @@ public class Node<I extends IRemoteObject<M>, M extends IMessage> {
 							notifier.wait();
 						}
 					} catch (InterruptedException e) {
-						log.warn("Was interrupted while waiting for messages to be released.", e);
+						log.warn(getLocalAddress() + " - Was interrupted while waiting for messages to be released.", e);
 					}
 				}
 			}
@@ -169,9 +164,7 @@ public class Node<I extends IRemoteObject<M>, M extends IMessage> {
 	 * @param message	The {@link IMessage} to send.
 	 */
 	public void broadcast(M message) {
-		List<Address> remoteAddresses = Lists.newArrayList(listRemoteAddresses());
-		remoteAddresses.remove(getLocalAddress());
-		multicast(message, remoteAddresses);
+		multicast(message, listRemoteAddresses());
 	}
 
 	/**
@@ -241,12 +234,12 @@ public class Node<I extends IRemoteObject<M>, M extends IMessage> {
 	
 	private I getRemote(Address address) throws RemoteException {
 		if (remotes.containsKey(address)) {
-			log.trace("Retrieving proxy object for remote: {}", address);
+			log.trace(getLocalAddress() + " - Retrieving proxy object for remote: {}", address);
 			RemoteNode<I>client = remotes.get(address);
 			return client.initialize();
 		}
 		else {
-			log.trace("Creating new proxy object for remote: {}", address);
+			log.trace(getLocalAddress() + " - Creating new proxy object for remote: {}", address);
 			RemoteNode<I> client = new RemoteNode<>(address, localOnly);
 			I relay = client.initialize();
 			remotes.put(address, client);

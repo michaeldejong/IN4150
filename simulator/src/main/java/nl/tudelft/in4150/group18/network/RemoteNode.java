@@ -48,7 +48,7 @@ class RemoteNode<T extends Remote> {
 		}
 		
 		try {
-			log.debug("Doing lookup of proxy object for remote: {}", address);
+			log.trace("Doing lookup of proxy object for remote: {}", address);
 			String rmiUrl = "rmi://" + address.getHostAddress() + ":" + address.getPort() + "/relay";
 			remote = (T) Naming.lookup(rmiUrl);
 			return remote;

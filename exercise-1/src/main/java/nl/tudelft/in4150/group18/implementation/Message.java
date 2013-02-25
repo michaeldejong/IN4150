@@ -5,7 +5,7 @@ import nl.tudelft.in4150.group18.common.IRemoteObject.IMessage;
 /**
  * A simple {@link IMessage} containing a counter field.
  */
-public class Message implements IMessage {
+public class Message implements IMessage, Comparable<Message> {
 
 	private static final long serialVersionUID = 3585089413268308745L;
 	
@@ -36,6 +36,11 @@ public class Message implements IMessage {
 	@Override
 	public String toString() {
 		return "[" + messageId + "]";
+	}
+
+	@Override
+	public int compareTo(Message o) {
+		return messageId.compareTo(o.messageId);
 	}
 	
 }

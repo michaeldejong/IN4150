@@ -44,13 +44,13 @@ public class TotalOrdering extends DistributedAlgorithmWithAcks<Message, Ack> {
 
 	@Override
 	public void start() {
-		log.info("Starting algorithm...");
+		log.info(getLocalAddress() + " - Starting algorithm...");
 
 		Runnable broadcaster = new Runnable() {
 			@Override
 			public void run() {
 				Message message = createMessage();
-				log.info("Broadcasting message: {}", message);
+				log.info(getLocalAddress() + " - Broadcasting message: {}", message);
 				broadcast(message);
 
 				int randomDelay = new Random().nextInt(100);
@@ -63,20 +63,29 @@ public class TotalOrdering extends DistributedAlgorithmWithAcks<Message, Ack> {
 
 	@Override
 	protected void onAcknowledgement(Ack message, Address from) {
-		MessageIdentifier timestamp = message.getId();
-		log.debug("Received ACK for message with timestamp: {}", timestamp);
-		receivedAcks.put(timestamp, from);
-
-		checkMessages();
+		synchronized (lock) {
+			MessageIdentifier timestamp = message.getId();
+			log.debug(getLocalAddress() + " - Received ACK for message with timestamp: {}", timestamp);
+			receivedAcks.put(timestamp, from);
+	
+			checkMessages();
+		}
 	}
 
 	@Override
 	protected void onMessageReceived(Message message, Address from) {
 		synchronized (lock) {
-			log.debug("Received a Message {} from {} and placed it in the message queue", message, from);
-			messageQueue.add(message);
+			log.debug(getLocalAddress() + " - Received a Message {} from {} and placed it in the message queue", message, from);
+			
+			try {
+				messageQueue.add(message);
+			}
+			catch (Throwable e) {
+				log.error(e.getMessage(), e);
+				log.info("");
+			}
 
-			log.debug("Broadcasting ACK for message {} to the cluster", message);
+			log.debug(getLocalAddress() + " - Broadcasting ACK for message {} to the cluster", message);
 			MessageIdentifier timestamp = message.getId();
 			broadcast(new Ack(timestamp));
 
@@ -113,7 +122,7 @@ public class TotalOrdering extends DistributedAlgorithmWithAcks<Message, Ack> {
 	 * Either the message queue is empty or we have to wait for others to ACK (-> return;)
 	 */
 	private void checkMessages() {
-		log.debug("Checking if one or more Messages can be delivered...");
+		log.debug(getLocalAddress() + " - Checking if one or more Messages can be delivered...");
 
 		while (!messageQueue.isEmpty()) {
 			Message message = messageQueue.peek(); // oldest message
@@ -125,6 +134,7 @@ public class TotalOrdering extends DistributedAlgorithmWithAcks<Message, Ack> {
 
 			receivedAcks.removeAll(messageId);
 			messageConsumer.deliver(messageQueue.poll());
+			log.info(getLocalAddress() + " - Delivered message {} internally", message);
 		}
 	}
 
