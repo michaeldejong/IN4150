@@ -18,11 +18,11 @@ public abstract class DistributedAlgorithmWithAcks<M extends IMessage, A extends
 	@SuppressWarnings("unchecked")
 	public final void onMessage(IMessage message, Address from) {
 		if (message instanceof IAck) {
-			log.debug("Received ACK {} from {}", message, from);
+			log.debug("{}: Received ACK {} from {}", getLocalAddress(), message, from);
 			onAcknowledgement((A) message, from);
 			return;
 		}
-		log.debug("Received MESSAGE {} from {}", message, from);
+		log.debug("{}: Received MESSAGE {} from {}", getLocalAddress(), message, from);
 		onMessageReceived((M) message, from);
 	}
 	
