@@ -28,6 +28,7 @@ public class MessageConsumer {
 			if (timestamp.getTimestamp() < lastReceivedTimestamp.get()) {
 				log.error("Received unexpected Message: " + message + " <-> Last received timestamp: " + lastReceivedTimestamp);
 				receivedAllMessagesInOrder.set(false);
+				throw new MessageDeliveredOutOfOrderException("Received message: " + message.getTimestamp() + ", but expected: " + lastReceivedTimestamp);
 			}
 			
 			lastReceivedTimestamp.set(timestamp.getTimestamp());
