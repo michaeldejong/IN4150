@@ -73,7 +73,7 @@ public class NodeController<M extends IMessage> {
 	 * 
 	 * To release these {@link IMessage}s again, see {@link NodeController#releaseMessages()}.
 	 */
-	public void holdMessages() {
+	public void holdMessagesToSend() {
 		node.holdMessages();
 	}
 	
@@ -82,7 +82,7 @@ public class NodeController<M extends IMessage> {
 	 * its buffer of messages to their respective destinations. Additionally
 	 * new {@link IMessage} will be allowed to be sent immediately.
 	 * 
-	 * Also see {@link NodeController#holdMessages()}.
+	 * Also see {@link NodeController#holdMessagesToSend()}.
 	 */
 	public void releaseMessages() {
 		node.releaseMessages();

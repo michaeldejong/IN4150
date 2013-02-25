@@ -41,13 +41,13 @@ public class MessageIdentifier implements Serializable, Comparable<MessageIdenti
 	}
 
 	@Override
-	public int compareTo(MessageIdentifier o) {
-		int timestampCompare = Long.compare(timestamp, o.timestamp);
+	public int compareTo(MessageIdentifier id) {
+		int timestampCompare = Long.compare(timestamp, id.timestamp);
 		if (timestampCompare != 0) {
 			return timestampCompare;
 		}
 		
-		return address.compareTo(o.address);
+		return address.compareTo(id.address);
 	}
 	
 	@Override

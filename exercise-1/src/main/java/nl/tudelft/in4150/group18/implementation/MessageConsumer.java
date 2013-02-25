@@ -25,7 +25,8 @@ public class MessageConsumer {
 
 	/**
 	 * Checks validity of messages that are delivered
-	 * @param message
+	 * @param message delivered
+	 * @throws message delivered out of order exception (should never occur -> runtime exception)
 	 */
 	public void deliver(Message message) {
 		log.info("Delivered message: {}", message);
@@ -35,7 +36,8 @@ public class MessageConsumer {
 				log.error("Received unexpected Message: " + message + " <-> Last received timestamp: "
 						+ lastReceivedTimestamp);
 				receivedAllMessagesInOrder.set(false);
-				throw new MessageDeliveredOutOfOrderException("Received message: " + message.getTimestamp() + ", but expected: " + lastReceivedTimestamp);
+				throw new MessageDeliveredOutOfOrderException("Received message: " + message.getId()
+						+ ", but expected: " + lastReceivedTimestamp);
 			}
 
 			lastReceivedTimestamp.set(timestamp.getTimestamp());
@@ -51,6 +53,14 @@ public class MessageConsumer {
 
 	public List<Message> getReceivedMessages() {
 		return Collections.unmodifiableList(receivedMessages);
+	}
+
+	/**
+	 * Convenience method
+	 * @return Amount of messages delivered on this node
+	 */
+	public int numberOfMessagesDelivered() {
+		return getReceivedMessages().size();
 	}
 
 }
