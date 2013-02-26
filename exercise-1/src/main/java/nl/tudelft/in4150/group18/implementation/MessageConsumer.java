@@ -24,9 +24,10 @@ public class MessageConsumer {
 	/**
 	 * Checks validity of messages that are delivered
 	 * @param message delivered
-	 * @throws message delivered out of order exception (should never occur -> runtime exception)
+	 * @throws MessageDeliveredOutOfOrderException	Will be thrown in case the delivered message 
+	 * 												is older than a previously received message. 
 	 */
-	public void deliver(Message message) {
+	public void deliver(Message message) throws MessageDeliveredOutOfOrderException {
 		synchronized (lock) {
 			MessageIdentifier messageId = message.getId();
 			if (messageId.getTimestamp() < lastMessageId.get()) {
