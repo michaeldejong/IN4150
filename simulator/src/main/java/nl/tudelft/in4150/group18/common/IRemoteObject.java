@@ -25,12 +25,15 @@ public interface IRemoteObject<M extends IMessage> extends Remote {
 	void onMessage(M message, Address from) throws RemoteException;
 	
 	/**
+	 * @param remoteAddressesKnownByOtherRemote	 A {@link Set} of {@link Address}es, 
+	 * 			which are known by the remote requesting this.
+	 * 
 	 * @return	a {@link Collection} of {@link Address}es of remotes of which 
 	 * 			the external remote knows about.
 	 * 
 	 * @throws RemoteException	In case a RMI exception occurred.
 	 */
-	Set<Address> discover() throws RemoteException;
+	Set<Address> exchangeKnownAddresses(Set<Address> remoteAddressesKnownByOtherRemote) throws RemoteException;
 
 	/**
 	 * A simple empty class which can be extended with additional fields to convey additional information.

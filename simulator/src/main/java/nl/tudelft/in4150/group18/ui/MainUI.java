@@ -175,17 +175,8 @@ public class MainUI extends JFrame {
 
 	private void listRemoteNodes() {
 		StringBuilder builder = new StringBuilder();
-		boolean empty = true;
 		for (Address address : main.listRemoteAddresses()) {
-			if (!address.equals(main.getLocalAddress())) {
-				if (empty) {
-					builder.append(" - " + address.getHostAddress() + ":" + address.getPort());
-				}
-				else {
-					builder.append("\n - " + address.getHostAddress() + ":" + address.getPort());
-				}
-			}
-			empty = false;
+			builder.append(" - " + address.getHostAddress() + ":" + address.getPort() + "\n");
 		}
 		remotesPanel.setText(builder.toString());
 	}

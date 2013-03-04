@@ -9,6 +9,9 @@ import nl.tudelft.in4150.group18.common.IRemoteObject.IMessage;
 import nl.tudelft.in4150.group18.network.Address;
 import nl.tudelft.in4150.group18.network.Node;
 
+import com.google.common.collect.Sets;
+import com.google.common.collect.Sets.SetView;
+
 /**
  * This class is called by remote nodes, and relays the calls to the specified {@link DistributedAlgorithm}.
  * 
@@ -44,8 +47,14 @@ public class RemoteObject<M extends IMessage> extends UnicastRemoteObject implem
 	}
 
 	@Override
-	public Set<Address> discover() throws RemoteException {
-		return node.listRemoteAddresses();
+	public Set<Address> exchangeKnownAddresses(Set<Address> externalAddresses) throws RemoteException {
+		Set<Address> knownRemotes = node.listAllAddresses();
+		SetView<Address> newRemotes = Sets.difference(externalAddresses, knownRemotes);
+		for (Address address : newRemotes) {
+			node.addRemote(address).exchangeKnownAddresses(node.listAllAddresses());
+		}
+		
+		return node.listAllAddresses();
 	}
 	
 }

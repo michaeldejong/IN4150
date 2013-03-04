@@ -7,6 +7,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -19,6 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Range;
+import com.google.common.collect.Sets;
 
 /**
  * This class contains an internal {@link Receiver} to process messages from remotes, and a collection 
@@ -81,6 +83,15 @@ public class Node<I extends IRemoteObject<M>, M extends IMessage> {
 	 */
 	public Set<Address> listRemoteAddresses() {
 		return Collections.unmodifiableSet(remotes.keySet());
+	}
+	
+	/**
+	 * @return	A {@link Collection} of {@link Address}es of currently known remotes.
+	 */
+	public Set<Address> listAllAddresses() {
+		HashSet<Address> addresses = Sets.newHashSet(remotes.keySet());
+		addresses.add(getLocalAddress());
+		return Collections.unmodifiableSet(addresses);
 	}
 
 	/**
@@ -226,13 +237,17 @@ public class Node<I extends IRemoteObject<M>, M extends IMessage> {
 	}
 	
 	private void scanRemote(Address address) throws RemoteException {
-		Set<Address> externalRemotes = getRemote(address).discover();
+		Set<Address> externalRemotes = getRemote(address).exchangeKnownAddresses(listAllAddresses());
 		for (Address remote : externalRemotes) {
-			getRemote(remote);
+			getRemote(remote).exchangeKnownAddresses(listAllAddresses());
 		}
 	}
 	
 	private I getRemote(Address address) throws RemoteException {
+		if (address.equals(getLocalAddress())) {
+			throw new RemoteException("Cannot connect to self.");
+		}
+		
 		if (remotes.containsKey(address)) {
 			log.trace(getLocalAddress() + " - Retrieving proxy object for remote: {}", address);
 			RemoteNode<I>client = remotes.get(address);
