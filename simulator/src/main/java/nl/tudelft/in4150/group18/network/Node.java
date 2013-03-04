@@ -170,7 +170,7 @@ public class Node<I extends IRemoteObject<M>, M extends IMessage> {
 	}
 	
 	/**
-	 * This method sends a {@link IMessage} to every {@link Address} specified.
+	 * This method sends a {@link IMessage} to every currently known {@link Address}.
 	 * 
 	 * @param message	The {@link IMessage} to send.
 	 */

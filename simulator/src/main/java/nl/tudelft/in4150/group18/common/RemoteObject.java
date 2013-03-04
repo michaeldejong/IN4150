@@ -13,7 +13,9 @@ import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
 
 /**
- * This class is called by remote nodes, and relays the calls to the specified {@link DistributedAlgorithm}.
+ * Every node in the network should have exactly one instance of this class. This object is then registered 
+ * with a Java RMI Registry, and made available to other external Java Virtual Machines. This class
+ * is capable of receiving messages from external nodes, which will be relayed to the specified {@link DistributedAlgorithm}.
  * 
  * @author michael
  *
