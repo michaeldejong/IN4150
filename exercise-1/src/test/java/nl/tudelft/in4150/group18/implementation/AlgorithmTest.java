@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.InetAddress;
 
 import nl.tudelft.in4150.group18.NodeController;
-import nl.tudelft.in4150.group18.common.IRemoteObject.IMessage;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -12,7 +11,7 @@ import org.junit.Test;
 
 public class AlgorithmTest {
 
-	private NodeController<IMessage> controller1, controller2, controller3;
+	private NodeController controller1, controller2, controller3;
 	private TotalOrdering algorithm1, algorithm2, algorithm3;
 	private MessageConsumer consumer1, consumer2, consumer3;
 
@@ -27,9 +26,9 @@ public class AlgorithmTest {
 		algorithm3 = new TotalOrdering(consumer3);
 
 		InetAddress localHost = InetAddress.getLocalHost();
-		controller1 = new NodeController<>(localHost, true, algorithm1);
-		controller2 = new NodeController<>(localHost, true, algorithm2);
-		controller3 = new NodeController<>(localHost, true, algorithm3);
+		controller1 = new NodeController(localHost, true, algorithm1);
+		controller2 = new NodeController(localHost, true, algorithm2);
+		controller3 = new NodeController(localHost, true, algorithm3);
 
 		// fully connected network
 		controller1.addRemote(controller2.getLocalAddress());

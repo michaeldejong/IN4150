@@ -21,7 +21,7 @@ public class Simulator {
 		// Prevent instantiation.
 	}
 
-	public static void start(DistributedAlgorithm<?> algorithm, String[] args) throws IOException {
+	public static void start(DistributedAlgorithm algorithm, String[] args) throws IOException {
 		boolean isLocal = containsParam(args, "--local");
 		boolean missingAdditionalParams = !isLocal && !containsParam(args, "--interface");
 		
@@ -45,7 +45,7 @@ public class Simulator {
 			}
 			
 			InetAddress localAddress = getHostAddress(isLocal, args);
-			new NodeController<>(localAddress, isLocal, algorithm);
+			new NodeController(localAddress, isLocal, algorithm);
 		}
 	}
 
@@ -56,7 +56,7 @@ public class Simulator {
 	 * @throws SocketException	In case we couldn't retrieve all the required network information to
 	 * 							form the cluster.
 	 */
-	private static void promptConfigDialog(final DistributedAlgorithm<?> algorithm) throws SocketException {
+	private static void promptConfigDialog(final DistributedAlgorithm algorithm) throws SocketException {
 		new NetworkInterfaceChooserDialog(new NetworkInterfaceChooserDialog.Callback() {
 			@Override
 			public void onSelect(boolean local, String networkInterface) {

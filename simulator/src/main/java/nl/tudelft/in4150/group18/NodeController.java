@@ -18,10 +18,10 @@ import nl.tudelft.in4150.group18.network.Node;
  * @author michael
  * @param <M>
  */
-public class NodeController<M extends IMessage> {
+public class NodeController {
 	
-	private final Node<IRemoteObject<M>, M> node;
-	private final DistributedAlgorithm<M> algorithm;
+	private final Node<IRemoteObject<IMessage>, IMessage> node;
+	private final DistributedAlgorithm algorithm;
 
 	/**
 	 * Constructs a new {@link NodeController} object.
@@ -32,7 +32,7 @@ public class NodeController<M extends IMessage> {
 	 * 
 	 * @throws IOException	In case there were problems setting up Java RMI.
 	 */
-	public NodeController(InetAddress address, boolean localOnly, DistributedAlgorithm<M> algorithm) throws IOException {
+	public NodeController(InetAddress address, boolean localOnly, DistributedAlgorithm algorithm) throws IOException {
 		this.algorithm = algorithm;
 		this.node = new Node<>(address, localOnly);
 		this.node.registerRelay(new RemoteObject<>(node, algorithm));

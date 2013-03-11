@@ -17,9 +17,9 @@ import nl.tudelft.in4150.group18.network.Node;
  *
  * @param <M>
  */
-public abstract class DistributedAlgorithm<M extends IMessage> {
+public abstract class DistributedAlgorithm {
 
-	private Node<IRemoteObject<M>, M> node;
+	private Node<IRemoteObject<IMessage>, IMessage> node;
 
 	/**
 	 * This method will be called upon starting a {@link DistributedAlgorithm}. Note that only one
@@ -35,7 +35,7 @@ public abstract class DistributedAlgorithm<M extends IMessage> {
 	 * @param message	The received {@link IMessage}.
 	 * @param from		The {@link Address} of the remote which sent the {@link IMessage}.
 	 */
-	public abstract void onMessage(M message, Address from);
+	public abstract void onMessage(IMessage message, Address from);
 	
 	/**
 	 * This method sets the {@link IRemoteObject} which the 
@@ -43,7 +43,7 @@ public abstract class DistributedAlgorithm<M extends IMessage> {
 	 * 
 	 * @param node	The {@link IRemoteObject} to use.
 	 */
-	void setNode(Node<IRemoteObject<M>, M> node) {
+	void setNode(Node<IRemoteObject<IMessage>, IMessage> node) {
 		this.node = node;
 	}
 	
@@ -62,7 +62,7 @@ public abstract class DistributedAlgorithm<M extends IMessage> {
 	 * 
 	 * @throws RemoteException	In case we could not message specified remote.
 	 */
-	protected void send(M content, Address address) throws RemoteException {
+	protected void send(IMessage content, Address address) throws RemoteException {
 		node.send(content, address);
 	}
 	
@@ -72,7 +72,7 @@ public abstract class DistributedAlgorithm<M extends IMessage> {
 	 * @param content	The {@link IMessage} to send.
 	 * @param addresses	The {@link Address}es to send it to.
 	 */
-	protected void multicast(M content, Collection<Address> addresses) {
+	protected void multicast(IMessage content, Collection<Address> addresses) {
 		node.multicast(content, addresses);
 	}
 
@@ -81,7 +81,7 @@ public abstract class DistributedAlgorithm<M extends IMessage> {
 	 * 
 	 * @param content	The {@link IMessage} to send.
 	 */
-	protected void broadcast(M content) {
+	protected void broadcast(IMessage content) {
 		node.broadcast(content);
 	}
 

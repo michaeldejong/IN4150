@@ -35,17 +35,17 @@ public class MainUI extends JFrame {
 	
 	private final Timer timer;
 	private final LocalAddressPanel myAddressPanel;
-	private final NodeController<?> main;
+	private final NodeController main;
 	private final JTextArea remotesPanel;
 	
-	public MainUI(boolean localOnly, InetAddress localAddress, DistributedAlgorithm<?> algorithm) throws IOException {
+	public MainUI(boolean localOnly, InetAddress localAddress, DistributedAlgorithm algorithm) throws IOException {
 		setTitle("IN4150: Distributed algorithms - Group 18");
 		setSize(500, 400);
 		setLocation(100, 100);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		this.timer = new Timer(true);
-		this.main = new NodeController<>(localAddress, localOnly, algorithm);
+		this.main = new NodeController(localAddress, localOnly, algorithm);
 		this.myAddressPanel = new LocalAddressPanel();
 		this.myAddressPanel.setLocalAddress(main.getLocalAddress());
 		this.remotesPanel = new JTextArea();

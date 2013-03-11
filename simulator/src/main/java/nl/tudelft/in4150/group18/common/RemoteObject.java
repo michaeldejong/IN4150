@@ -24,7 +24,7 @@ import com.google.common.collect.Sets.SetView;
 @SuppressWarnings("serial")
 public class RemoteObject<M extends IMessage> extends UnicastRemoteObject implements IRemoteObject<M> {
 
-	private final DistributedAlgorithm<M> algorithm;
+	private final DistributedAlgorithm algorithm;
 	private final Node<IRemoteObject<M>, M> node;
 
 	/**
@@ -33,7 +33,7 @@ public class RemoteObject<M extends IMessage> extends UnicastRemoteObject implem
 	 * @param algorithm			The {@link DistributedAlgorithm} to relay the messages to.
 	 * @throws RemoteException	In case the {@link RemoteObject} could not be registered with RMI.
 	 */
-	public RemoteObject(Node<IRemoteObject<M>, M> node, DistributedAlgorithm<M> algorithm) throws RemoteException {
+	public RemoteObject(Node<IRemoteObject<M>, M> node, DistributedAlgorithm algorithm) throws RemoteException {
 		super();
 		this.node = node;
 		this.algorithm = algorithm;
