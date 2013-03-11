@@ -43,5 +43,6 @@
 	<modules>
 		<module>exercise-1</module>
 		<module>simulator</module>
+		<module>exercise2</module>
 	</modules>
 </project>

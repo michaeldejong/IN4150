@@ -15,3 +15,9 @@ exercise-1/.classpath
 exercise-1/.settings/org.eclipse.jdt.core.prefs
 exercise-1/.settings/org.eclipse.m2e.core.prefs
 exercise-1/target/*
+
+exercise-2/.project
+exercise-2/.classpath
+exercise-2/.settings/org.eclipse.jdt.core.prefs
+exercise-2/.settings/org.eclipse.m2e.core.prefs
+exercise-2/target/*
