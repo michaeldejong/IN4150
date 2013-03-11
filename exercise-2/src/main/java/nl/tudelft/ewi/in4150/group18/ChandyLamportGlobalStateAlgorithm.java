@@ -18,12 +18,19 @@ public class ChandyLamportGlobalStateAlgorithm extends DistributedAlgorithm {
 	private final Map<Address, Queue<IMessage>> messageQueues = Maps.newHashMap();
 	private final Object lock = new Object();
 	
+	private volatile MoneySender sender;
 	private volatile boolean localStateRecorded = false;
-
+	
 	@Override
 	public void start() {
-		// TODO Auto-generated method stub
+		sender = new MoneySender(getRemoteAddresses()) {
+			@Override
+			void sendTransaction(Transaction transaction, Address to) throws Throwable {
+				send(transaction, to);
+			}
+		};
 		
+		sender.start();
 	}
 
 	@Override
