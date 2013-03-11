@@ -30,6 +30,7 @@ public class ChandyLamportGlobalStateAlgorithm extends DistributedAlgorithm {
 	public void onMessage(IMessage message, Address from) {
 		synchronized (lock) {
 			if (message instanceof Marker) {
+				receivedMarkersFrom.add(from);
 				if (!localStateRecorded) {
 					messageQueues.put(from, Queues.<IMessage>newArrayDeque());
 					recordLocalState();
