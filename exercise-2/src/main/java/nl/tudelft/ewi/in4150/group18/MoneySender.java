@@ -15,17 +15,17 @@ import com.google.common.collect.Lists;
 public abstract class MoneySender implements Runnable {
 
 	private static final Logger log = LoggerFactory.getLogger(MoneySender.class);
-	
+
 	private final AtomicLong messageId = new AtomicLong(0);
 	private final AtomicLong balance = new AtomicLong(1000);
 	private final Random random = new Random(System.currentTimeMillis());
 	private final List<Address> remotes;
 	private volatile Thread thread;
-	
+
 	public MoneySender(Collection<Address> remotes) {
 		this.remotes = Lists.newArrayList(remotes);
 	}
-	
+
 	public void start() {
 		if (thread != null) {
 			throw new IllegalStateException("Cannot start RandomBroadcaster twice!");
@@ -46,11 +46,10 @@ public abstract class MoneySender implements Runnable {
 					balance.addAndGet(100);
 				}
 			}
-			
+
 			try {
 				Thread.sleep(random.nextInt(250));
-			} 
-			catch (InterruptedException e) {
+			} catch (InterruptedException e) {
 				log.error(e.getMessage(), e);
 			}
 		}
@@ -61,9 +60,12 @@ public abstract class MoneySender implements Runnable {
 	}
 
 	abstract void sendTransaction(Transaction transaction, Address to) throws Throwable;
-	
+
 	public void receivedTransaction(Transaction transaction) {
 		balance.addAndGet(transaction.getValue());
 	}
 
+	public long getBalance() {
+		return balance.get();
+	}
 }
