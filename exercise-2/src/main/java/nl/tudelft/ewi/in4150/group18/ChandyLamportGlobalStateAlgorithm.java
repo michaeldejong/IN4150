@@ -18,7 +18,6 @@ public class ChandyLamportGlobalStateAlgorithm extends DistributedAlgorithm {
 
 	private final AtomicBoolean recordedState = new AtomicBoolean();
 	private final AtomicInteger markerId = new AtomicInteger();
-	private final AtomicReference<MarkerCounter> counter = new AtomicReference<>(new MarkerCounter());
 	private final AtomicReference<NumberSender> sender = new AtomicReference<>();
 
 	/** Queue of messages since last received marker */
@@ -58,12 +57,6 @@ public class ChandyLamportGlobalStateAlgorithm extends DistributedAlgorithm {
 
 			if (message instanceof Marker) {
 				Marker marker = (Marker) message;
-				if (counter.get().getCount(marker) >= 2) {
-					return;
-				}
-				
-				counter.get().add(marker);
-				
 				log.info("{} - Received Marker: {}", getLocalAddress(), marker);
 				if (!isStateRecorded()) {
 					channelStates.clearQueue(from);
@@ -107,7 +100,7 @@ public class ChandyLamportGlobalStateAlgorithm extends DistributedAlgorithm {
 		log.info("{} - Recording internal state...", getLocalAddress());
 		try {
 			//TODO actually record the local state: for instance where are we with sending or calculating stuff
-			Thread.sleep(1000);
+			Thread.sleep(3000);
 		} catch (InterruptedException e) {
 			log.error(e.getMessage(), e);
 		}
