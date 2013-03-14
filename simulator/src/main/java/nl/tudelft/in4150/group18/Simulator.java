@@ -83,7 +83,7 @@ public class Simulator {
 	 * @throws IOException	If we couldn't retrieve network information.
 	 */
 	private static InetAddress getHostAddress(boolean isLocal, String[] params) throws IOException {
-		if (containsParam(params, "--local")) {
+		if (isLocal) {
 			return InetAddress.getLocalHost();
 		}
 		
