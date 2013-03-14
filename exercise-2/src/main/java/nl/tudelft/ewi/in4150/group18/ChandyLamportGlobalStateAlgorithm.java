@@ -1,73 +1,74 @@
 package nl.tudelft.ewi.in4150.group18;
 
-import java.util.Map;
 import java.util.Queue;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 import nl.tudelft.in4150.group18.DistributedAlgorithm;
 import nl.tudelft.in4150.group18.common.IRemoteObject.IMessage;
 import nl.tudelft.in4150.group18.network.Address;
 
-import com.google.common.collect.Maps;
-import com.google.common.collect.Queues;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ChandyLamportGlobalStateAlgorithm extends DistributedAlgorithm {
+	
+	private static final Logger log = LoggerFactory.getLogger(ChandyLamportGlobalStateAlgorithm.class);
 
-	/** Recorded local state per received marker */
-	private final Map<Marker, LocalState> receivedMarkers = Maps.newHashMap();
+	private final AtomicBoolean recordedState = new AtomicBoolean();
+	
+	private final AtomicReference<NumberSender> sender = new AtomicReference<>();
 
 	/** Queue of messages since last received marker */
-	private final Map<Address, Queue<IMessage>> messageQueues = Maps.newHashMap();
-
+	private final MultiQueue<IMessage> messageQueues = MultiQueue.create();
+	private final MultiQueue<IMessage> channelState = MultiQueue.create();
+	
 	/** On arrival of a message or marker either save local state or process the message one at a time */
 	private final Object lock = new Object();
-
-	private volatile MoneySender sender;
-
-	/** Check if the local process state is recorded for a certain marker (convenience method) */
-	private boolean isStateRecorded(Marker m) {
-		return receivedMarkers.containsKey(m) && receivedMarkers.get(m) != null;
-	}
-
+	
 	@Override
 	public void start() {
-		sender = new MoneySender(getRemoteAddresses()) {
+		NumberSender numberSender = new NumberSender(getRemoteAddresses()) {
 			@Override
-			void sendTransaction(Transaction transaction, Address to) throws Throwable {
+			void sendTransaction(Message transaction, Address to) throws Throwable {
 				send(transaction, to);
 			}
 		};
-
-		sender.start();
+		
+		sender.set(numberSender);
+		numberSender.start();
 	}
-
+	
+	public void captureState() {
+		recordLocalState(new Marker());
+	}
+	
 	@Override
 	public void onMessage(IMessage message, Address from) {
 		synchronized (lock) {
+			Queue<IMessage> queue = messageQueues.getQueue(from);
+			
 			if (message instanceof Marker) {
-				/**
-					upon receipt of (a marker along channel c) do
-						if (not local_state_recorded) then
-							record state of c as empty
-							record_local_state
-						else
-							record state of c as contents of Q(c)
-				**/
 				Marker marker = (Marker) message;
-				if (!isStateRecorded(marker)) { // new marker received
-					messageQueues.put(from, Queues.<IMessage>newArrayDeque());
+				log.info("{} - Received Marker: {}", getLocalAddress(), marker);
+				
+				if (!isStateRecorded()) {
+					channelState.clearQueue(from);
 					recordLocalState(marker);
-				} 
-				else { // already received this marker
-							// TODO record state of c as current content of Q(c).
+				}
+				else {
+					channelState.setContents(from, queue);
+					log.info("{} - Channel state is: {}", getLocalAddress(), channelState.getQueue(from));
 				}
 			}
-			else if (message instanceof Transaction) {
-				// TODO localStateRecorded not possible: per marker
-				// TODO receivedMarkersFrom not possible: loop over all received marker.getAddress()
-				if (localStateRecorded || receivedMarkersFrom.contains(from)) {
-					messageQueues.get(from).add(message);
-				} 
+			else {
+				if (isStateRecorded()) {
+					queue.add(message);
+				}
 				else {
+					while (!queue.isEmpty()) {
+						handleMessage(queue.poll());
+					}
 					handleMessage(message);
 				}
 			}
@@ -75,36 +76,34 @@ public class ChandyLamportGlobalStateAlgorithm extends DistributedAlgorithm {
 	}
 
 	private void handleMessage(IMessage message) {
-		// TODO Auto-generated method stub
-
+		log.info("{} - Handled message: {}", getLocalAddress(), message);
 	}
 
-	/**
-	procedure record_local_state:
-		record local state
-		local_state_recorded := true
-		for (every outgoing channel c) do
-			send(marker) along c
-		for (every incoming channel c) do
-			create message queue Q(c)
-	 **/
 	private void recordLocalState(Marker m) {
 		synchronized (lock) {
-			recordInternalState(m);
+			recordInternalState();
+			broadcast(m);
 
-			broadcast(new Marker());
-
-			messageQueues.clear();
 			for (Address address : getRemoteAddresses()) {
-				messageQueues.put(address, Queues.<IMessage> newArrayDeque());
+				messageQueues.clearQueue(address);
 			}
 		}
 	}
 
-	private void recordInternalState(Marker m) {
-		LocalState record = new LocalState(sender.getBalance(), // TODO last received and sent message id per address
-				);
+	private void recordInternalState() {
+		recordedState.set(true);
+		log.info("{} - Recording internal state...", getLocalAddress());
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			log.error(e.getMessage(), e);
+		}
+		
+		log.info("{} - Recorded internal state: {}", getLocalAddress());
+		recordedState.set(true);
+	}
 
-		receivedMarkers.put(m, record); // localStateRecorded = true;
+	private boolean isStateRecorded() {
+		return recordedState.get();
 	}
 }
