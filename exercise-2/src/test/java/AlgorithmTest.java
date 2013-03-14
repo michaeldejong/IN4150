@@ -31,7 +31,7 @@ public class AlgorithmTest {
 		c3.addRemote(c1.getLocalAddress());
 		c3.addRemote(c2.getLocalAddress());
 	}
-	
+
 	@Test
 	public void test() throws InterruptedException {
 		a1.start();
@@ -39,11 +39,11 @@ public class AlgorithmTest {
 		a2.start();
 		Thread.sleep(5);
 		a3.start();
-		
+
 		Thread.sleep(200);
 		
 		a1.captureState();
 		Thread.sleep(10000);
 	}
-	
+
 }

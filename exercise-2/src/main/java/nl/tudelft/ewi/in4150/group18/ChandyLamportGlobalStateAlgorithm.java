@@ -13,22 +13,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ChandyLamportGlobalStateAlgorithm extends DistributedAlgorithm {
-	
+
 	private static final Logger log = LoggerFactory.getLogger(ChandyLamportGlobalStateAlgorithm.class);
 
 	private final AtomicBoolean recordedState = new AtomicBoolean();
 	private final AtomicInteger markerId = new AtomicInteger();
 	private final AtomicReference<MarkerCounter> counter = new AtomicReference<>(new MarkerCounter());
-	
 	private final AtomicReference<NumberSender> sender = new AtomicReference<>();
 
 	/** Queue of messages since last received marker */
 	private final MultiQueue<IMessage> messageQueues = MultiQueue.create();
-	private final MultiQueue<IMessage> channelState = MultiQueue.create();
-	
+	private final MultiQueue<IMessage> channelStates = MultiQueue.create();
+
 	/** On arrival of a message or marker either save local state or process the message one at a time */
 	private final Object lock = new Object();
-	
+
 	@Override
 	public void start() {
 		if (sender.get() == null) {
@@ -38,10 +37,10 @@ public class ChandyLamportGlobalStateAlgorithm extends DistributedAlgorithm {
 					send(transaction, to);
 				}
 			};
-			
+
 			sender.set(numberSender);
 			numberSender.start();
-		}
+		} 
 		else {
 			captureState();
 		}
@@ -50,13 +49,13 @@ public class ChandyLamportGlobalStateAlgorithm extends DistributedAlgorithm {
 	public void captureState() {
 		recordLocalState(new Marker(getLocalAddress(), markerId.incrementAndGet()));
 	}
-	
+
 	@Override
 	public void onMessage(IMessage message, Address from) {
 		synchronized (lock) {
 			log.info("{} - Received: {}", getLocalAddress(), message);
 			Queue<IMessage> queue = messageQueues.getQueue(from);
-			
+
 			if (message instanceof Marker) {
 				Marker marker = (Marker) message;
 				if (counter.get().getCount(marker) >= 2) {
@@ -65,21 +64,19 @@ public class ChandyLamportGlobalStateAlgorithm extends DistributedAlgorithm {
 				
 				counter.get().add(marker);
 				
+				log.info("{} - Received Marker: {}", getLocalAddress(), marker);
 				if (!isStateRecorded()) {
-					channelState.clearQueue(from);
+					channelStates.clearQueue(from);
 					recordLocalState(marker);
-				}
-				else {
-					channelState.setContents(from, queue);
-					log.info("{} - Channel state is: {}", getLocalAddress(), channelState.getQueue(from));
+				} else {
+					channelStates.setContents(from, queue);
+					log.info("{} - Channel state is: {}", getLocalAddress(), channelStates.getQueue(from));
 					recordedState.set(false);
 				}
-			}
-			else {
+			} else {
 				if (isStateRecorded()) {
 					queue.add(message);
-				}
-				else {
+				} else {
 					while (!queue.isEmpty()) {
 						handleMessage(queue.poll());
 					}
@@ -93,10 +90,10 @@ public class ChandyLamportGlobalStateAlgorithm extends DistributedAlgorithm {
 		log.info("{} - Handled message: {}", getLocalAddress(), message);
 	}
 
-	private void recordLocalState(Marker m) {
+	private void recordLocalState(Marker marker) {
 		synchronized (lock) {
 			recordInternalState();
-			broadcast(m);
+			broadcast(marker);
 
 			for (Address address : getRemoteAddresses()) {
 				messageQueues.clearQueue(address);
@@ -109,6 +106,7 @@ public class ChandyLamportGlobalStateAlgorithm extends DistributedAlgorithm {
 		numberSender.pause();
 		log.info("{} - Recording internal state...", getLocalAddress());
 		try {
+			//TODO actually record the local state: for instance where are we with sending or calculating stuff
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 			log.error(e.getMessage(), e);
@@ -117,7 +115,6 @@ public class ChandyLamportGlobalStateAlgorithm extends DistributedAlgorithm {
 		recordedState.set(true);
 		numberSender.resume();
 	}
-	
 
 	private boolean isStateRecorded() {
 		return recordedState.get();
