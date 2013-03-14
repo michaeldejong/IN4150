@@ -46,11 +46,11 @@ public class ChandyLamportGlobalStateAlgorithm extends DistributedAlgorithm {
 	@Override
 	public void onMessage(IMessage message, Address from) {
 		synchronized (lock) {
+			log.info("{} - Received: {}", getLocalAddress(), message);
 			Queue<IMessage> queue = messageQueues.getQueue(from);
 			
 			if (message instanceof Marker) {
 				Marker marker = (Marker) message;
-				log.info("{} - Received Marker: {}", getLocalAddress(), marker);
 				
 				if (!isStateRecorded()) {
 					channelState.clearQueue(from);
@@ -59,6 +59,7 @@ public class ChandyLamportGlobalStateAlgorithm extends DistributedAlgorithm {
 				else {
 					channelState.setContents(from, queue);
 					log.info("{} - Channel state is: {}", getLocalAddress(), channelState.getQueue(from));
+					recordedState.set(false);
 				}
 			}
 			else {
@@ -91,17 +92,19 @@ public class ChandyLamportGlobalStateAlgorithm extends DistributedAlgorithm {
 	}
 
 	private void recordInternalState() {
-		recordedState.set(true);
+		NumberSender numberSender = sender.get();
+		numberSender.pause();
 		log.info("{} - Recording internal state...", getLocalAddress());
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 			log.error(e.getMessage(), e);
 		}
-		
-		log.info("{} - Recorded internal state: {}", getLocalAddress());
+		log.info("{} - Recorded internal state: {}", getLocalAddress(), numberSender.getId());
 		recordedState.set(true);
+		numberSender.resume();
 	}
+	
 
 	private boolean isStateRecorded() {
 		return recordedState.get();

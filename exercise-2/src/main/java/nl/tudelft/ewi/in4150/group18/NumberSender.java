@@ -39,6 +39,10 @@ public abstract class NumberSender implements Runnable {
 	public void run() {
 		while (true) {
 			try {
+				while (!send.get()) {
+					Thread.sleep(100);
+				}
+				
 				sendTransaction(new Message(messageId.getAndIncrement()), selectRandomPeer());
 				Thread.sleep(random.nextInt(1000));
 			} catch (Throwable e) {
@@ -59,6 +63,10 @@ public abstract class NumberSender implements Runnable {
 
 	public void pause() {
 		send.set(false);
+	}
+
+	public long getId() {
+		return messageId.get();
 	}
 
 }
