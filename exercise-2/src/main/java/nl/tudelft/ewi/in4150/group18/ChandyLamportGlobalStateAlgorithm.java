@@ -2,6 +2,7 @@ package nl.tudelft.ewi.in4150.group18;
 
 import java.util.Queue;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import nl.tudelft.in4150.group18.DistributedAlgorithm;
@@ -16,6 +17,8 @@ public class ChandyLamportGlobalStateAlgorithm extends DistributedAlgorithm {
 	private static final Logger log = LoggerFactory.getLogger(ChandyLamportGlobalStateAlgorithm.class);
 
 	private final AtomicBoolean recordedState = new AtomicBoolean();
+	private final AtomicInteger markerId = new AtomicInteger();
+	private final AtomicReference<MarkerCounter> counter = new AtomicReference<>(new MarkerCounter());
 	
 	private final AtomicReference<NumberSender> sender = new AtomicReference<>();
 
@@ -45,7 +48,7 @@ public class ChandyLamportGlobalStateAlgorithm extends DistributedAlgorithm {
 	}
 	
 	public void captureState() {
-		recordLocalState(new Marker());
+		recordLocalState(new Marker(getLocalAddress(), markerId.incrementAndGet()));
 	}
 	
 	@Override
@@ -56,6 +59,11 @@ public class ChandyLamportGlobalStateAlgorithm extends DistributedAlgorithm {
 			
 			if (message instanceof Marker) {
 				Marker marker = (Marker) message;
+				if (counter.get().getCount(marker) >= 2) {
+					return;
+				}
+				
+				counter.get().add(marker);
 				
 				if (!isStateRecorded()) {
 					channelState.clearQueue(from);

@@ -43,7 +43,7 @@ public class AlgorithmTest {
 		Thread.sleep(200);
 		
 		a1.captureState();
-		Thread.sleep(4000);
+		Thread.sleep(10000);
 	}
 	
 }

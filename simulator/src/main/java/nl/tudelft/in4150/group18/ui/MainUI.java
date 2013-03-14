@@ -114,7 +114,6 @@ public class MainUI extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				autoDetect.setEnabled(false);
-				start.setEnabled(false);
 				add.setEnabled(false);
 				main.start();
 			}
