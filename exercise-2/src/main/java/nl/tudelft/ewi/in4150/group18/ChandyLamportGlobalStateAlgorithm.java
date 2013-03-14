@@ -25,11 +25,7 @@ public class ChandyLamportGlobalStateAlgorithm extends DistributedAlgorithm {
 
 	/** Check if the local process state is recorded for a certain marker (convenience method) */
 	private boolean isStateRecorded(Marker m) {
-		if (receivedMarkers.containsKey(m) && receivedMarkers.get(m) != null) {
-			return true;
-		} else {
-			return false;
-		}
+		return receivedMarkers.containsKey(m) && receivedMarkers.get(m) != null;
 	}
 
 	@Override
@@ -58,20 +54,20 @@ public class ChandyLamportGlobalStateAlgorithm extends DistributedAlgorithm {
 				**/
 				Marker marker = (Marker) message;
 				if (!isStateRecorded(marker)) { // new marker received
-					messageQueues.put(from, Queues.<IMessage> newArrayDeque());
+					messageQueues.put(from, Queues.<IMessage>newArrayDeque());
 					recordLocalState(marker);
-				} else { // already received this marker
+				} 
+				else { // already received this marker
 							// TODO record state of c as current content of Q(c).
 				}
 			}
-
 			else if (message instanceof Transaction) {
-
 				// TODO localStateRecorded not possible: per marker
 				// TODO receivedMarkersFrom not possible: loop over all received marker.getAddress()
 				if (localStateRecorded || receivedMarkersFrom.contains(from)) {
 					messageQueues.get(from).add(message);
-				} else {
+				} 
+				else {
 					handleMessage(message);
 				}
 			}
