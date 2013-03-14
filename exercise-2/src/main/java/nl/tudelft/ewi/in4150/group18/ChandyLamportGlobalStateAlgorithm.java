@@ -28,15 +28,20 @@ public class ChandyLamportGlobalStateAlgorithm extends DistributedAlgorithm {
 	
 	@Override
 	public void start() {
-		NumberSender numberSender = new NumberSender(getRemoteAddresses()) {
-			@Override
-			void sendTransaction(Message transaction, Address to) throws Throwable {
-				send(transaction, to);
-			}
-		};
-		
-		sender.set(numberSender);
-		numberSender.start();
+		if (sender.get() == null) {
+			NumberSender numberSender = new NumberSender(getRemoteAddresses()) {
+				@Override
+				void sendTransaction(Message transaction, Address to) throws Throwable {
+					send(transaction, to);
+				}
+			};
+			
+			sender.set(numberSender);
+			numberSender.start();
+		}
+		else {
+			captureState();
+		}
 	}
 	
 	public void captureState() {
