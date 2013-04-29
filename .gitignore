@@ -21,3 +21,9 @@ exercise-2/.classpath
 exercise-2/.settings/org.eclipse.jdt.core.prefs
 exercise-2/.settings/org.eclipse.m2e.core.prefs
 exercise-2/target/*
+
+exercise-3/.project
+exercise-3/.classpath
+exercise-3/.settings/org.eclipse.jdt.core.prefs
+exercise-3/.settings/org.eclipse.m2e.core.prefs
+exercise-3/target/*
