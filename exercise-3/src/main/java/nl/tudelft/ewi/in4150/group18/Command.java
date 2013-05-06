@@ -1,6 +1,6 @@
 package nl.tudelft.ewi.in4150.group18;
 
-import java.util.Collection;
+import java.util.List;
 
 import nl.tudelft.in4150.group18.common.IRemoteObject.IMessage;
 import nl.tudelft.in4150.group18.network.Address;
@@ -11,12 +11,12 @@ public class Command implements IMessage {
 
 	private int f;
 	private Type type;
-	private Collection<Address> remainingLuitenants;
+	private List<Address> path;
 	
-	public Command(int f, Type type, Collection<Address> remainingLuitenants) {
+	public Command(int f, Type type, List<Address> path) {
 		this.f = f;
 		this.type = type;
-		this.remainingLuitenants = remainingLuitenants;
+		this.path = path;
 	}
 	
 	public int getF() {
@@ -27,8 +27,8 @@ public class Command implements IMessage {
 		return type;
 	}
 	
-	public Collection<Address> getRemainingLuitenants() {
-		return remainingLuitenants;
+	public List<Address> getPath() {
+		return path;
 	}
 	
 	public enum Type {
