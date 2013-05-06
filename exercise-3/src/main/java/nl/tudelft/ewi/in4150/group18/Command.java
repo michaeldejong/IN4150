@@ -10,25 +10,26 @@ import com.google.common.base.Joiner;
 public class Command implements IMessage {
 
 	private static final long serialVersionUID = 5523621758360730807L;
+	public static final Type DEFAULT = Type.RETREAT;
 
 	private int f;
 	private Type type;
 	private List<Address> path;
-	
+
 	public Command(int f, Type type, List<Address> path) {
 		this.f = f;
 		this.type = type;
 		this.path = path;
 	}
-	
+
 	public int getF() {
 		return f;
 	}
-	
+
 	public Type getType() {
 		return type;
 	}
-	
+
 	public List<Address> getPath() {
 		return path;
 	}
