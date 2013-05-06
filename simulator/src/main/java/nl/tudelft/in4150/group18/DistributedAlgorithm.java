@@ -86,6 +86,37 @@ public abstract class DistributedAlgorithm {
 	}
 
 	/**
+	 * This method sends a {@link IMessage} to the specified {@link Address}.
+	 * 
+	 * @param content	The {@link IMessage} to send.
+	 * @param address	The {@link Address} to send it to.
+	 * 
+	 * @throws RemoteException	In case we could not message specified remote.
+	 */
+	protected void sendSynchronous(IMessage content, Address address) throws RemoteException {
+		node.sendSynchronous(content, address);
+	}
+	
+	/**
+	 * This method sends a {@link IMessage} to multiple remotes.
+	 * 
+	 * @param content	The {@link IMessage} to send.
+	 * @param addresses	The {@link Address}es to send it to.
+	 */
+	protected void multicastSynchronous(IMessage content, Collection<Address> addresses) {
+		node.multicastSynchronous(content, addresses);
+	}
+
+	/**
+	 * This method sends a {@link IMessage} to all known remotes.
+	 * 
+	 * @param content	The {@link IMessage} to send.
+	 */
+	protected void broadcastSynchronous(IMessage content) {
+		node.broadcastSynchronous(content);
+	}
+
+	/**
 	 * @return	The {@link Address} of this local machine.
 	 */
 	protected Address getLocalAddress() {

@@ -38,6 +38,6 @@ public interface IRemoteObject<M extends IMessage> extends Remote {
 	/**
 	 * A simple empty class which can be extended with additional fields to convey additional information.
 	 */
-	interface IMessage extends Serializable { }
+	public interface IMessage extends Serializable { }
 	
 }
