@@ -15,6 +15,13 @@ public class ByzantineAgreement extends DistributedAlgorithm {
 
 	private Type command;
 	private int f;
+	private final boolean isTraitor;
+	private final boolean isFaulty;
+
+	public ByzantineAgreement(boolean traitor, boolean faulty) {
+		isTraitor = traitor;
+		isFaulty = faulty;
+	}
 
 	public void configureCommander(Type command, int f) {
 		this.command = command;
@@ -68,7 +75,31 @@ public class ByzantineAgreement extends DistributedAlgorithm {
 			List<Address> path = Lists.newArrayList(message.getPath());
 			path.add(getLocalAddress());
 
-			multicastSynchronous(new Command(message.getF() - 1, message.getType(), path), remaining);
+			Type content = message.getType();
+
+			if (isTraitor) { // always retreat
+				content = Type.RETREAT;
+			}
+
+			if (isFaulty || Math.random() < 0.75) { // 75% chance of screwing something up
+				if (Math.random() < 0.5) { // 50% chance of content = null
+					content = null;
+				} else { // otherwise pick something at random
+					if (Math.random() < 0.5) {
+						content = Type.ATTACK;
+					} else {
+						content = Type.RETREAT;
+					}
+				}
+				// randomize path
+				for (int i = path.size(); i >= 0; i--) {
+					if (Math.random() < 0.5) { // 50% chance per id to screw it up
+						path.set(i, path.get((int) (Math.random() * path.size())));
+					}
+				}
+			}
+
+			multicastSynchronous(new Command(message.getF() - 1, content, path), remaining);
 		}
 	}
 

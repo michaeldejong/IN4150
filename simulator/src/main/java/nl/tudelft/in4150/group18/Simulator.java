@@ -14,9 +14,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Simulator {
-	
+
 	private static final Logger log = LoggerFactory.getLogger(Simulator.class);
-	
+
 	private Simulator() {
 		// Prevent instantiation.
 	}
@@ -24,26 +24,26 @@ public class Simulator {
 	public static void start(DistributedAlgorithm algorithm, String[] args) throws IOException {
 		boolean isLocal = containsParam(args, "--local");
 		boolean missingAdditionalParams = !isLocal && !containsParam(args, "--interface");
-		
-		if (containsParam(args, "--ui")) { 
+
+		if (containsParam(args, "--ui")) {
 			if (missingAdditionalParams) {
 				promptConfigDialog(algorithm);
-			}
-			else {
+			} else {
 				InetAddress localAddress = getHostAddress(isLocal, args);
 				new MainUI(isLocal, localAddress, algorithm);
 			}
-		}
-		else {
+		} else {
 			if (missingAdditionalParams) {
 				System.out.println("At least one of the following parameters is required:");
 				System.out.println("  --ui                Opens a graphic user interface.");
-				System.out.println("  --local             Indicates that this algorithm only runs amongst local nodes.");
-				System.out.println("  --interface name    Indicates that this algorithm runs across the network, using a specific network interface.");
+				System.out
+						.println("  --local             Indicates that this algorithm only runs amongst local nodes.");
+				System.out
+						.println("  --interface name    Indicates that this algorithm runs across the network, using a specific network interface.");
 				System.out.println();
 				System.exit(0);
 			}
-			
+
 			InetAddress localAddress = getHostAddress(isLocal, args);
 			new NodeController(localAddress, isLocal, algorithm);
 		}
@@ -86,7 +86,7 @@ public class Simulator {
 		if (isLocal) {
 			return InetAddress.getLocalHost();
 		}
-		
+
 		String interfaceName = params[findParam(params, "--interface") + 1];
 		return getHostAddressFromInterface(interfaceName);
 	}
@@ -110,11 +110,11 @@ public class Simulator {
 						return address;
 					}
 				}
-				
+
 				throw new IllegalArgumentException("Could not locate IPv4 address for interface: " + interfaceName);
 			}
 		}
-		
+
 		throw new IllegalArgumentException("Could not locate network interface: " + interfaceName);
 	}
 
@@ -125,10 +125,10 @@ public class Simulator {
 	 * @param needle	The needle to look for in the array of parameters.
 	 * @return			True if the needle occurs in the array or false otherwise.
 	 */
-	private static boolean containsParam(String[] params, String needle) {
+	public static boolean containsParam(String[] params, String needle) {
 		return findParam(params, needle) >= 0;
 	}
-	
+
 	/**
 	 * This method returns the index of the needle in the parameters.
 	 * 
@@ -137,7 +137,7 @@ public class Simulator {
 	 * @return			The index of the needle in the array of parameters. This method 
 	 * 					will return -1 if the needle does not occur in the parameters.
 	 */
-	private static int findParam(String[] params, String needle) {
+	public static int findParam(String[] params, String needle) {
 		for (int i = 0; i < params.length; i++) {
 			if (params[i].equalsIgnoreCase(needle)) {
 				return i;
@@ -145,5 +145,5 @@ public class Simulator {
 		}
 		return -1;
 	}
-	
+
 }
