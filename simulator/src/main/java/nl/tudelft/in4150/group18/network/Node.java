@@ -131,30 +131,34 @@ public class Node<I extends IRemoteObject<M>, M extends IMessage> {
 		executor.submit(new Runnable() {
 			@Override
 			public void run() {
-				waitUntilAllowedToSend();
-				
-				try {
-					log.debug(getLocalAddress() + " - Sending {}: {} to: {}", message.getClass().getSimpleName(), message, to);
-					getRemote(to).onMessage(message, getLocalAddress());
-				}
-				catch (RemoteException e) {
-					log.warn(getLocalAddress() + " - Remote doesn't seem to be online anymore.", e);
-					remotes.remove(to);
-				}
-			}
-
-			private void waitUntilAllowedToSend() {
-				while (holdMessages) {
-					try {
-						synchronized (notifier) {
-							notifier.wait();
-						}
-					} catch (InterruptedException e) {
-						log.warn(getLocalAddress() + " - Was interrupted while waiting for messages to be released.", e);
-					}
-				}
+				sendSynchronous(message, to);
 			}
 		});
+	}
+	
+	public void sendSynchronous(M message, Address to) {
+		waitUntilAllowedToSend();
+		
+		try {
+			log.debug(getLocalAddress() + " - Sending {}: {} to: {}", message.getClass().getSimpleName(), message, to);
+			getRemote(to).onMessage(message, getLocalAddress());
+		}
+		catch (RemoteException e) {
+			log.warn(getLocalAddress() + " - Remote doesn't seem to be online anymore.", e);
+			remotes.remove(to);
+		}
+	}
+
+	private void waitUntilAllowedToSend() {
+		while (holdMessages) {
+			try {
+				synchronized (notifier) {
+					notifier.wait();
+				}
+			} catch (InterruptedException e) {
+				log.warn(getLocalAddress() + " - Was interrupted while waiting for messages to be released.", e);
+			}
+		}
 	}
 	
 	/**
@@ -170,12 +174,33 @@ public class Node<I extends IRemoteObject<M>, M extends IMessage> {
 	}
 	
 	/**
+	 * This method sends a {@link IMessage} to every {@link Address} specified.
+	 * 
+	 * @param message	The {@link IMessage} to send.
+	 * @param to		The {@link Address}es to send the {@link IMessage} to.
+	 */
+	public void multicastSynchronous(M message, Collection<Address> to) {
+		for (Address address : to) {
+			sendSynchronous(message, address);
+		}
+	}
+	
+	/**
 	 * This method sends a {@link IMessage} to every currently known {@link Address}.
 	 * 
 	 * @param message	The {@link IMessage} to send.
 	 */
 	public void broadcast(M message) {
 		multicast(message, listRemoteAddresses());
+	}
+	
+	/**
+	 * This method sends a {@link IMessage} to every currently known {@link Address}.
+	 * 
+	 * @param message	The {@link IMessage} to send.
+	 */
+	public void broadcastSynchronous(M message) {
+		multicastSynchronous(message, listRemoteAddresses());
 	}
 
 	/**
