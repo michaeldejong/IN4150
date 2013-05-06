@@ -8,8 +8,10 @@ import java.rmi.registry.Registry;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 import nl.tudelft.in4150.group18.common.IRemoteObject;
@@ -18,6 +20,7 @@ import nl.tudelft.in4150.group18.common.IRemoteObject.IMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Range;
 import com.google.common.collect.Sets;
@@ -127,8 +130,8 @@ public class Node<I extends IRemoteObject<M>, M extends IMessage> {
 	 * @param message	The {@link IMessage} to send.
 	 * @param to		The {@link Address} to send the {@link IMessage} to.
 	 */
-	public void send(final M message, final Address to) {
-		executor.submit(new Runnable() {
+	public Future<?> send(final M message, final Address to) {
+		return executor.submit(new Runnable() {
 			@Override
 			public void run() {
 				sendSynchronous(message, to);
@@ -186,6 +189,26 @@ public class Node<I extends IRemoteObject<M>, M extends IMessage> {
 	}
 	
 	/**
+	 * This method sends a {@link IMessage} to every {@link Address} specified.
+	 * 
+	 * @param message	The {@link IMessage} to send.
+	 * @param to		The {@link Address}es to send the {@link IMessage} to.
+	 */
+	public void multicastWait(M message, Collection<Address> to) {
+		List<Future<?>> futures = Lists.newLinkedList();
+		for (Address address : to) {
+			futures.add(send(message, address));
+		}
+		
+		while (!futures.isEmpty()) {
+			Future<?> future = futures.get(0);
+			if (future.isDone() || future.isCancelled()) {
+				futures.remove(0);
+			}
+		}
+	}
+	
+	/**
 	 * This method sends a {@link IMessage} to every currently known {@link Address}.
 	 * 
 	 * @param message	The {@link IMessage} to send.
@@ -201,6 +224,15 @@ public class Node<I extends IRemoteObject<M>, M extends IMessage> {
 	 */
 	public void broadcastSynchronous(M message) {
 		multicastSynchronous(message, listRemoteAddresses());
+	}
+	
+	/**
+	 * This method sends a {@link IMessage} to every currently known {@link Address}.
+	 * 
+	 * @param message	The {@link IMessage} to send.
+	 */
+	public void broadcastWait(M message) {
+		multicastWait(message, listRemoteAddresses());
 	}
 
 	/**

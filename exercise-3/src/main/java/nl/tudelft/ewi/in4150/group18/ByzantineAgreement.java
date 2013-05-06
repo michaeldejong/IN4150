@@ -1,7 +1,12 @@
 package nl.tudelft.ewi.in4150.group18;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
 import nl.tudelft.ewi.in4150.group18.Command.Type;
 import nl.tudelft.in4150.group18.DistributedAlgorithm;
@@ -9,43 +14,97 @@ import nl.tudelft.in4150.group18.common.IRemoteObject.IMessage;
 import nl.tudelft.in4150.group18.network.Address;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 public class ByzantineAgreement extends DistributedAlgorithm {
 
-	private Type command;
-	private int f;
+	private final Map<Address, Type> received = Maps.newHashMap();
+	private final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
+	private final AtomicReference<Future<?>> currentFuture = new AtomicReference<>();
+	private final Type defaultCommand;
+	
+	private int timeout = 100;
+	private int maximumFaults = 1;
 
-	public void configureCommander(Type command, int f) {
-		this.command = command;
-		this.f = f;
+	public ByzantineAgreement(Type defaultCommand) {
+		this.defaultCommand = defaultCommand;
+	}
+	
+	public void setMaximumFaults(int maximumFaults) {
+		this.maximumFaults = maximumFaults;
+	}
+	
+	public void setTimeout(int millis) {
+		this.timeout = millis;
 	}
 	
 	@Override
 	public void start() {
-		broadcastSynchronous(new Command(f, command, Lists.newArrayList(getLocalAddress())));
+		broadcastWait(new Command(maximumFaults, defaultCommand, Lists.newArrayList(getLocalAddress())));
 	}
 
 	@Override
 	public void onMessage(IMessage message, Address from) {
 		if (message instanceof Command) {
+			time();
 			handleCommand((Command) message, from);
 		}
 	}
 
 	private void handleCommand(Command message, Address from) {
+		received.put(from, message.getType());
+		
 		Set<Address> remaining = Sets.newHashSet(getRemoteAddresses());
 		remaining.removeAll(message.getPath());
+		
+		List<Address> path = Lists.newArrayList(message.getPath());
+		path.add(getLocalAddress());
+		
+		if (message.getF() > 0){
+			multicastWait(new Command(message.getF() - 1, message.getType(), path), remaining);
+		}
+	}
 
-		if (message.getF() == 0) {
-			// Do something magical...
-		}
-		else {
-			List<Address> path = Lists.newArrayList(message.getPath());
-			path.add(getLocalAddress());
+	private void time() {
+		synchronized (currentFuture) {
+			if (currentFuture.get() != null) {
+				currentFuture.get().cancel(true);
+			}
 			
-			multicastSynchronous(new Command(message.getF() - 1, message.getType(), path), remaining);
+			currentFuture.set(executor.schedule(new Runnable() {
+				@Override
+				public void run() {
+					for (Address address : getRemoteAddresses()) {
+						if (!received.containsKey(address)) {
+							received.put(address, defaultCommand);
+						}
+					}
+					
+					checkMajority();
+				}
+			}, timeout, TimeUnit.MILLISECONDS));
 		}
+	}
+
+	private void checkMajority() {
+		if (received.size() < getRemoteAddresses().size()) {
+			return;
+		}
+		
+		int attack = 0;
+		int retreat = 0;
+		for (Type type : received.values()) {
+			if (type == Type.ATTACK) {
+				attack++;
+			}
+			else if (type == Type.RETREAT) {
+				retreat++;
+			}
+		}
+		
+		Type majority = attack > retreat ? Type.ATTACK : Type.RETREAT;
+		System.out.println(getLocalAddress() + ": I decided to: " + majority + " (" + attack + "A / " + retreat + "R)");
 	}
 
 }

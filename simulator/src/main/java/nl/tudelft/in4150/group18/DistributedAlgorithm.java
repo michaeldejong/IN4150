@@ -115,6 +115,25 @@ public abstract class DistributedAlgorithm {
 	protected void broadcastSynchronous(IMessage content) {
 		node.broadcastSynchronous(content);
 	}
+	
+	/**
+	 * This method sends a {@link IMessage} to multiple remotes.
+	 * 
+	 * @param content	The {@link IMessage} to send.
+	 * @param addresses	The {@link Address}es to send it to.
+	 */
+	protected void multicastWait(IMessage content, Collection<Address> addresses) {
+		node.multicastWait(content, addresses);
+	}
+
+	/**
+	 * This method sends a {@link IMessage} to all known remotes.
+	 * 
+	 * @param content	The {@link IMessage} to send.
+	 */
+	protected void broadcastWait(IMessage content) {
+		node.broadcastWait(content);
+	}
 
 	/**
 	 * @return	The {@link Address} of this local machine.

@@ -5,6 +5,8 @@ import java.util.List;
 import nl.tudelft.in4150.group18.common.IRemoteObject.IMessage;
 import nl.tudelft.in4150.group18.network.Address;
 
+import com.google.common.base.Joiner;
+
 public class Command implements IMessage {
 
 	private static final long serialVersionUID = 5523621758360730807L;
@@ -29,6 +31,11 @@ public class Command implements IMessage {
 	
 	public List<Address> getPath() {
 		return path;
+	}
+	
+	@Override
+	public String toString() {
+		return "[" + f + ", " + type + ", " + Joiner.on("->").join(path) + "]";
 	}
 	
 	public enum Type {
