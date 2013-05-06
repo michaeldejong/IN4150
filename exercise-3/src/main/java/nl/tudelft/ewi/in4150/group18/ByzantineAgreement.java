@@ -89,8 +89,12 @@ public class ByzantineAgreement extends DistributedAlgorithm {
 			int f = message.getF() - 1;
 			Type content = message.getType();
 			
-			if (isTraitor) { // always retreat
-				content = Type.RETREAT;
+			if (isTraitor) { // confuse others
+				if (content.equals(Type.ATTACK)) {
+					content = Type.RETREAT;
+				} else {
+					content = Type.ATTACK;
+				}
 				// path?
 				// f?
 				// remaining?
