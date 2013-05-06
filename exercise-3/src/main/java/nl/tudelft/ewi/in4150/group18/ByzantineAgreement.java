@@ -71,6 +71,8 @@ public class ByzantineAgreement extends DistributedAlgorithm {
 				content = Command.DEFAULT;
 			}
 
+			// TODO: majority rules
+
 		} else {
 			List<Address> path = Lists.newArrayList(message.getPath());
 			path.add(getLocalAddress());
@@ -82,35 +84,35 @@ public class ByzantineAgreement extends DistributedAlgorithm {
 				content = Type.RETREAT;
 				// path?
 				// f?
+				// remaining?
 			}
 
-			if (isFaulty || Math.random() < 0.8) { // 80% chance of screwing something up
-
-				// 64% chance of crashing
-				if (Math.random() < 0.8) {
+			if (isFaulty) { // make errors
+				if (Math.random() < 0.25) { // crash
 					return;
 				}
-
-				// 32% chance of screwing up the f value
-				if (Math.random() < 0.5) {
+				if (Math.random() < 0.25) { // screw up the f value
 					f *= Math.random();
 				}
-
-				// 32% chance of content = null
-				if (Math.random() < 0.5) {
+				if (Math.random() < 0.5) { // forget content
 					content = null;
-				} else { // otherwise pick something at random
+				} else if (Math.random() < 0.5) { // pick something at random
 					if (Math.random() < 0.5) {
 						content = Type.ATTACK;
 					} else {
 						content = Type.RETREAT;
 					}
 				}
-
 				// randomize path
 				for (int i = path.size(); i >= 0; i--) {
-					if (Math.random() < 0.5) { // 32% chance per id to screw it up
+					if (Math.random() < 0.5) {
 						path.set(i, path.get((int) (Math.random() * path.size())));
+					}
+				}
+				// forget addresses
+				for (Address address : remaining) {
+					if (Math.random() < 0.5) {
+						remaining.remove(address);
 					}
 				}
 			}
