@@ -76,13 +76,28 @@ public class ByzantineAgreement extends DistributedAlgorithm {
 			path.add(getLocalAddress());
 
 			Type content = message.getType();
+			int f = message.getF() - 1;
 
 			if (isTraitor) { // always retreat
 				content = Type.RETREAT;
+				// path?
+				// f?
 			}
 
-			if (isFaulty || Math.random() < 0.75) { // 75% chance of screwing something up
-				if (Math.random() < 0.5) { // 50% chance of content = null
+			if (isFaulty || Math.random() < 0.8) { // 80% chance of screwing something up
+
+				// 64% chance of crashing
+				if (Math.random() < 0.8) {
+					return;
+				}
+
+				// 32% chance of screwing up the f value
+				if (Math.random() < 0.5) {
+					f *= Math.random();
+				}
+
+				// 32% chance of content = null
+				if (Math.random() < 0.5) {
 					content = null;
 				} else { // otherwise pick something at random
 					if (Math.random() < 0.5) {
@@ -91,15 +106,16 @@ public class ByzantineAgreement extends DistributedAlgorithm {
 						content = Type.RETREAT;
 					}
 				}
+
 				// randomize path
 				for (int i = path.size(); i >= 0; i--) {
-					if (Math.random() < 0.5) { // 50% chance per id to screw it up
+					if (Math.random() < 0.5) { // 32% chance per id to screw it up
 						path.set(i, path.get((int) (Math.random() * path.size())));
 					}
 				}
 			}
 
-			multicastSynchronous(new Command(message.getF() - 1, content, path), remaining);
+			multicastSynchronous(new Command(f, content, path), remaining);
 		}
 	}
 
