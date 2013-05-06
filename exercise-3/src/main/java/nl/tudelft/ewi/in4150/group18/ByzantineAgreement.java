@@ -46,7 +46,7 @@ public class ByzantineAgreement extends DistributedAlgorithm {
 	 * 
 	 * (3) For each i, and each j != i, let vj be the value Lieutenant i received from Lieutenant j in step (2)
 	 * (using Algorithm OM(m - 1)), or else RETREAT if he received no such value.
-	 * Lieutenant i uses the value majority (v1 ..... v,-1 ). 
+	 * Lieutenant i uses the value majority (v1 ..... vn-1 ). 
 	 * 
 	 * source: http://www.cs.cornell.edu/courses/cs614/2004sp/papers/lsp82.pdf
 	 * 
@@ -58,7 +58,12 @@ public class ByzantineAgreement extends DistributedAlgorithm {
 		remaining.removeAll(message.getPath());
 
 		if (message.getF() == 0) {
-			// Do something magical...
+
+			Type content = message.getType();
+			if (content == null) {
+				content = Command.DEFAULT;
+			}
+
 		} else {
 			List<Address> path = Lists.newArrayList(message.getPath());
 			path.add(getLocalAddress());
