@@ -12,18 +12,18 @@ public class Command implements IMessage {
 	private static final long serialVersionUID = 5523621758360730807L;
 	public static final Type DEFAULT = Type.RETREAT;
 
-	private int f;
+	private int maximumFaults;
 	private Type type;
 	private List<Address> path;
 
-	public Command(int f, Type type, List<Address> path) {
-		this.f = f;
+	public Command(int maximumFaults, Type type, List<Address> path) {
+		this.maximumFaults = maximumFaults;
 		this.type = type;
 		this.path = path;
 	}
 
-	public int getF() {
-		return f;
+	public int getMaximumFaults() {
+		return maximumFaults;
 	}
 
 	public Type getType() {
@@ -36,7 +36,7 @@ public class Command implements IMessage {
 	
 	@Override
 	public String toString() {
-		return "[" + f + ", " + type + ", " + Joiner.on("->").join(path) + "]";
+		return "[" + maximumFaults + ", " + type + ", " + Joiner.on("->").join(path) + "]";
 	}
 	
 	public enum Type {

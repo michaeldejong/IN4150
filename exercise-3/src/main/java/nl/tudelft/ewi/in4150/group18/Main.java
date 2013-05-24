@@ -9,9 +9,9 @@ import nl.tudelft.in4150.group18.Simulator;
 
 public class Main {
 
-	private static final int GENERALS = 4;
+	private static final int GENERALS = 6;
 	private static final int FAULTY = 1;
-	private static final int TRAITORS = 0;
+	private static final int TRAITORS = 1;
 	
 	private static final ThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(GENERALS);
 	
@@ -39,11 +39,11 @@ public class Main {
 		Type command = Simulator.containsParam(args, "--default:attack") ? Type.ATTACK : Type.RETREAT;
 		
 		if (Simulator.containsParam(args, "--traitor")) {
-			Simulator.start(new ByzantineAgreement(command, true, false), args);
+			Simulator.start(new TraitorByzantineAgreement(command), args);
 		} else if (Simulator.containsParam(args, "--faulty")) {
-			Simulator.start(new ByzantineAgreement(command, false, true), args);
+			Simulator.start(new FaultyByzantineAgreement(command), args);
 		} else {
-			Simulator.start(new ByzantineAgreement(command, false, false), args);
+			Simulator.start(new ByzantineAgreement(command), args);
 		}
 	}
 	

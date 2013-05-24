@@ -23,16 +23,12 @@ public class ByzantineAgreement extends DistributedAlgorithm {
 	private final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
 	private final AtomicReference<Future<?>> currentFuture = new AtomicReference<>();
 	private final Type defaultCommand;
-	private final boolean isTraitor;
-	private final boolean isFaulty;
 	
 	private int timeout = 100;
 	private int maximumFaults = 1;
 
-	public ByzantineAgreement(Type defaultCommand, boolean traitor, boolean faulty) {
+	public ByzantineAgreement(Type defaultCommand) {
 		this.defaultCommand = defaultCommand;
-		isTraitor = traitor;
-		isFaulty = faulty;
 	}
 
 	public void setMaximumFaults(int maximumFaults) {
@@ -73,8 +69,8 @@ public class ByzantineAgreement extends DistributedAlgorithm {
 	 * 
 	 * source: http://www.cs.cornell.edu/courses/cs614/2004sp/papers/lsp82.pdf
 	 * 
-	 * @param message
-	 * @param from
+	 * @param message	the {@link Command} the lieutenant receives from the commander.
+	 * @param from		the {@link Address} he receives it from (commander).
 	 */
 	private void handleCommand(Command message, Address from) {
 		received.put(from, message.getType());
@@ -85,52 +81,11 @@ public class ByzantineAgreement extends DistributedAlgorithm {
 		List<Address> path = Lists.newArrayList(message.getPath());
 		path.add(getLocalAddress());
 		
-		if (message.getF() > 0){
-			int f = message.getF() - 1;
+		if (message.getMaximumFaults() > 0){
+			int maximumFaults = message.getMaximumFaults() - 1;
 			Type content = message.getType();
-			
-			if (isTraitor) { // confuse others
-				if (content.equals(Type.ATTACK)) {
-					content = Type.RETREAT;
-				} else {
-					content = Type.ATTACK;
-				}
-				// path?
-				// f?
-				// remaining?
-			}
 
-			if (isFaulty) { // make errors
-				if (Math.random() < 0.25) { // crash
-					return;
-				}
-				if (Math.random() < 0.25) { // screw up the f value
-					f *= Math.random();
-				}
-				if (Math.random() < 0.5) { // forget content
-					content = null;
-				} else if (Math.random() < 0.5) { // pick something at random
-					if (Math.random() < 0.5) {
-						content = Type.ATTACK;
-					} else {
-						content = Type.RETREAT;
-					}
-				}
-				// randomize path
-				for (int i = path.size(); i >= 0; i--) {
-					if (Math.random() < 0.5) {
-						path.set(i, path.get((int) (Math.random() * path.size())));
-					}
-				}
-				// forget addresses
-				for (Address address : remaining) {
-					if (Math.random() < 0.5) {
-						remaining.remove(address);
-					}
-				}
-			}
-			
-			multicastWait(new Command(f, content, path), remaining);
+			multicastWait(new Command(maximumFaults, content, path), remaining);
 		}
 	}
 
@@ -172,7 +127,7 @@ public class ByzantineAgreement extends DistributedAlgorithm {
 		}
 		
 		Type majority = attack > retreat ? Type.ATTACK : Type.RETREAT;
-		System.out.println(getLocalAddress() + ": I decided to: " + majority + " (" + attack + "A / " + retreat + "R)");
+		System.out.println(getLocalAddress() + ": (" + getClass().getSimpleName() + ") - I decided to: " + majority + " (" + attack + "A / " + retreat + "R)");
 	}
-
+	
 }
