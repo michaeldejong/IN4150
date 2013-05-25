@@ -1,6 +1,6 @@
 package nl.tudelft.in4150.group18;
 
-import nl.tudelft.in4150.group18.common.IRemoteObject.IMessage;
+import nl.tudelft.in4150.group18.common.IRemoteMessage.IMessage;
 import nl.tudelft.in4150.group18.network.Address;
 
 import org.slf4j.Logger;

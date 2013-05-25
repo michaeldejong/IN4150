@@ -6,7 +6,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import nl.tudelft.in4150.group18.DistributedAlgorithm;
-import nl.tudelft.in4150.group18.common.IRemoteObject.IMessage;
+import nl.tudelft.in4150.group18.common.IRemoteMessage.IMessage;
 import nl.tudelft.in4150.group18.network.Address;
 
 import org.slf4j.Logger;

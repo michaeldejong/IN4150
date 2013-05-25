@@ -3,10 +3,10 @@ package nl.tudelft.in4150.group18;
 import java.rmi.RemoteException;
 import java.util.Collection;
 
-import nl.tudelft.in4150.group18.common.IRemoteObject;
-import nl.tudelft.in4150.group18.common.IRemoteObject.IMessage;
+import nl.tudelft.in4150.group18.common.IRemoteMessage;
+import nl.tudelft.in4150.group18.common.IRemoteMessage.IMessage;
 import nl.tudelft.in4150.group18.network.Address;
-import nl.tudelft.in4150.group18.network.Node;
+import nl.tudelft.in4150.group18.network.MessagingNode;
 
 /**
  * This abstract class represents a distributed algorithm. To create and test
@@ -19,7 +19,7 @@ import nl.tudelft.in4150.group18.network.Node;
  */
 public abstract class DistributedAlgorithm {
 
-	private Node<IRemoteObject<IMessage>, IMessage> node;
+	private MessagingNode<IRemoteMessage<IMessage>, IMessage> node;
 
 	/**
 	 * This method will be called upon starting a {@link DistributedAlgorithm}. Note that only one
@@ -38,12 +38,12 @@ public abstract class DistributedAlgorithm {
 	public abstract void onMessage(IMessage message, Address from);
 	
 	/**
-	 * This method sets the {@link IRemoteObject} which the 
+	 * This method sets the {@link IRemoteMessage} which the 
 	 * {@link DistributedAlgorithm} should use for communication.
 	 * 
-	 * @param node	The {@link IRemoteObject} to use.
+	 * @param node	The {@link IRemoteMessage} to use.
 	 */
-	void setNode(Node<IRemoteObject<IMessage>, IMessage> node) {
+	void setNode(MessagingNode<IRemoteMessage<IMessage>, IMessage> node) {
 		this.node = node;
 	}
 	

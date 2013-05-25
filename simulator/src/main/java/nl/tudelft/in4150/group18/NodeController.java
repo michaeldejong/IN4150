@@ -5,23 +5,25 @@ import java.net.InetAddress;
 import java.rmi.RemoteException;
 import java.util.Collection;
 
-import nl.tudelft.in4150.group18.common.IRemoteObject;
-import nl.tudelft.in4150.group18.common.IRemoteObject.IMessage;
-import nl.tudelft.in4150.group18.common.RemoteObject;
+import nl.tudelft.in4150.group18.common.IRemoteMessage.IMessage;
+import nl.tudelft.in4150.group18.common.IRemoteRequest;
+import nl.tudelft.in4150.group18.common.IRemoteRequest.IRequest;
+import nl.tudelft.in4150.group18.common.RemoteRequestObject;
 import nl.tudelft.in4150.group18.network.Address;
-import nl.tudelft.in4150.group18.network.Node;
+import nl.tudelft.in4150.group18.network.MessagingNode;
+import nl.tudelft.in4150.group18.network.RequestingNode;
 
 /**
- * This is a wrapper class for the {@link Node} class. It adds functionality to manage
+ * This is a wrapper class for the {@link MessagingNode} class. It adds functionality to manage
  * a specified {@link DistributedAlgorithm} object, and various helper methods.
  * 
  * @author michael
  * @param <M>
  */
-public class NodeController {
+public class NodeController<R> {
 	
-	private final Node<IRemoteObject<IMessage>, IMessage> node;
-	private final DistributedAlgorithm algorithm;
+	private final RequestingNode<IRemoteRequest<IRequest, R>, IRequest, R> node;
+	private final SynchronousDistributedAlgorithm<?> algorithm;
 
 	/**
 	 * Constructs a new {@link NodeController} object.
@@ -32,10 +34,10 @@ public class NodeController {
 	 * 
 	 * @throws IOException	In case there were problems setting up Java RMI.
 	 */
-	public NodeController(InetAddress address, boolean localOnly, DistributedAlgorithm algorithm) throws IOException {
+	public NodeController(InetAddress address, boolean localOnly, SynchronousDistributedAlgorithm<R> algorithm) throws IOException {
 		this.algorithm = algorithm;
-		this.node = new Node<>(address, localOnly);
-		this.node.registerRelay(new RemoteObject<>(node, algorithm));
+		this.node = new RequestingNode<>(address, localOnly);
+		this.node.registerRelay(new RemoteRequestObject<>(node, algorithm));
 		algorithm.setNode(node);
 	}
 	

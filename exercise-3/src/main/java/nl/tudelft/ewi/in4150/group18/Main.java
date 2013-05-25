@@ -9,9 +9,10 @@ import nl.tudelft.in4150.group18.Simulator;
 
 public class Main {
 
-	private static final int GENERALS = 6;
-	private static final int FAULTY = 1;
-	private static final int TRAITORS = 1;
+	private static final int GENERALS = 5;
+	private static final int FAULTY = 0;
+	private static final int TRAITORS = 2;
+	private static final int MAX_FAULTS = 1;
 	
 	private static final ThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(GENERALS);
 	
@@ -38,13 +39,17 @@ public class Main {
 	private static void start(String[] args) throws IOException {
 		Type command = Simulator.containsParam(args, "--default:attack") ? Type.ATTACK : Type.RETREAT;
 		
+		Lieutenant lieutenant;
 		if (Simulator.containsParam(args, "--traitor")) {
-			Simulator.start(new TraitorByzantineAgreement(command), args);
+			lieutenant = new Traitor(command);
 		} else if (Simulator.containsParam(args, "--faulty")) {
-			Simulator.start(new FaultyByzantineAgreement(command), args);
+			lieutenant = new Faulty(command);
 		} else {
-			Simulator.start(new ByzantineAgreement(command), args);
+			lieutenant = new Lieutenant(command);
 		}
+		
+		lieutenant.setMaximumFaults(MAX_FAULTS);
+		Simulator.start(lieutenant, args);
 	}
 	
 	private static void startThreaded(final String[] args) {

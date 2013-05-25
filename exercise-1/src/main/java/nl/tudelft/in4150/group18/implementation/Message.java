@@ -1,6 +1,6 @@
 package nl.tudelft.in4150.group18.implementation;
 
-import nl.tudelft.in4150.group18.common.IRemoteObject.IMessage;
+import nl.tudelft.in4150.group18.common.IRemoteMessage.IMessage;
 
 /**
  * A simple {@link IMessage} containing a counter field.

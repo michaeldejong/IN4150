@@ -21,7 +21,7 @@ public class Simulator {
 		// Prevent instantiation.
 	}
 
-	public static void start(DistributedAlgorithm algorithm, String[] args) throws IOException {
+	public static <R> void start(SynchronousDistributedAlgorithm<R> algorithm, String[] args) throws IOException {
 		boolean isLocal = containsParam(args, "--local");
 		boolean missingAdditionalParams = !isLocal && !containsParam(args, "--interface");
 
@@ -30,22 +30,20 @@ public class Simulator {
 				promptConfigDialog(algorithm);
 			} else {
 				InetAddress localAddress = getHostAddress(isLocal, args);
-				new MainUI(isLocal, localAddress, algorithm);
+				new MainUI<R>(isLocal, localAddress, algorithm);
 			}
 		} else {
 			if (missingAdditionalParams) {
 				System.out.println("At least one of the following parameters is required:");
 				System.out.println("  --ui                Opens a graphic user interface.");
-				System.out
-						.println("  --local             Indicates that this algorithm only runs amongst local nodes.");
-				System.out
-						.println("  --interface name    Indicates that this algorithm runs across the network, using a specific network interface.");
+				System.out.println("  --local             Indicates that this algorithm only runs amongst local nodes.");
+				System.out.println("  --interface name    Indicates that this algorithm runs across the network, using a specific network interface.");
 				System.out.println();
 				System.exit(0);
 			}
 
 			InetAddress localAddress = getHostAddress(isLocal, args);
-			new NodeController(localAddress, isLocal, algorithm);
+			new NodeController<R>(localAddress, isLocal, algorithm);
 		}
 	}
 
@@ -56,7 +54,7 @@ public class Simulator {
 	 * @throws SocketException	In case we couldn't retrieve all the required network information to
 	 * 							form the cluster.
 	 */
-	private static void promptConfigDialog(final DistributedAlgorithm algorithm) throws SocketException {
+	private static <R> void promptConfigDialog(final SynchronousDistributedAlgorithm<R> algorithm) throws SocketException {
 		new NetworkInterfaceChooserDialog(new NetworkInterfaceChooserDialog.Callback() {
 			@Override
 			public void onSelect(boolean local, String networkInterface) {
@@ -65,7 +63,7 @@ public class Simulator {
 					if (networkInterface != null) {
 						hostAddress = getHostAddressFromInterface(networkInterface);
 					}
-					new MainUI(local, hostAddress, algorithm);
+					new MainUI<R>(local, hostAddress, algorithm);
 				} catch (IOException e) {
 					log.error(e.getMessage(), e);
 					System.exit(1);

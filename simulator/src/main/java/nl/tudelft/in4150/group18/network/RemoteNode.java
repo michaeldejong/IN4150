@@ -6,14 +6,14 @@ import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-import nl.tudelft.in4150.group18.common.IRemoteObject;
+import nl.tudelft.in4150.group18.common.IRemoteMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * This class is a representation of a remote node. This class allows you to lookup 
- * the {@link IRemoteObject} object from a remote node using Java RMI.
+ * the {@link IRemoteMessage} object from a remote node using Java RMI.
  * 
  * @author michael
  *

@@ -6,8 +6,8 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
-import nl.tudelft.in4150.group18.common.IRemoteObject;
-import nl.tudelft.in4150.group18.common.IRemoteObject.IMessage;
+import nl.tudelft.in4150.group18.common.IRemoteMessage;
+import nl.tudelft.in4150.group18.common.IRemoteRequest;
 
 /**
  * This class is responsible for managing incoming connections.
@@ -16,7 +16,7 @@ import nl.tudelft.in4150.group18.common.IRemoteObject.IMessage;
  *
  * @param <I>
  */
-class Receiver<I extends IMessage> {
+class Receiver {
 
 	private final Address address;
 	private Registry registry = null;
@@ -49,12 +49,22 @@ class Receiver<I extends IMessage> {
 	}
 	
 	/**
-	 * This method registers an {@link IRemoteObject} object with the RMI registry.
+	 * This method registers an {@link IRemoteMessage} object with the RMI registry.
 	 * 
-	 * @param relay				The {@link IRemoteObject} to register with the RMI registry.
-	 * @throws RemoteException	In case the {@link IRemoteObject} object could not be registered.
+	 * @param relay				The {@link IRemoteMessage} to register with the RMI registry.
+	 * @throws RemoteException	In case the {@link IRemoteMessage} object could not be registered.
 	 */
-	void registerRelay(IRemoteObject<I> relay) throws RemoteException {
+	void registerRelay(IRemoteMessage<?> relay) throws RemoteException {
+		registry.rebind("relay", relay);
+	}
+	
+	/**
+	 * This method registers an {@link IRemoteRequest} object with the RMI registry.
+	 * 
+	 * @param relay				The {@link IRemoteRequest} to register with the RMI registry.
+	 * @throws RemoteException	In case the {@link IRemoteRequest} object could not be registered.
+	 */
+	void registerRelay(IRemoteRequest<?, ?> relay) throws RemoteException {
 		registry.rebind("relay", relay);
 	}
 

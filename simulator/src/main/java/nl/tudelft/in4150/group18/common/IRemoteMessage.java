@@ -1,0 +1,43 @@
+package nl.tudelft.in4150.group18.common;
+
+import java.io.Serializable;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+import java.util.Collection;
+import java.util.Set;
+
+import nl.tudelft.in4150.group18.common.IRemoteMessage.IMessage;
+import nl.tudelft.in4150.group18.network.Address;
+
+/**
+ * Describes the methods a node can call on remote nodes.
+ */
+public interface IRemoteMessage<M extends IMessage> extends Remote {
+
+	/**
+	 * This method will be called upon receiving a {@link IMessage}.
+	 * 
+	 * @param message	The received {@link IMessage}.
+	 * @param from		The {@link Address} of the node which sent it.
+	 * 
+	 * @throws RemoteException	In case a RMI exception occurred.
+	 */
+	void onMessage(M message, Address from) throws RemoteException;
+	
+	/**
+	 * @param remoteAddressesKnownByOtherRemote	 A {@link Set} of {@link Address}es, 
+	 * 			which are known by the remote requesting this.
+	 * 
+	 * @return	a {@link Collection} of {@link Address}es of remotes of which 
+	 * 			the external remote knows about.
+	 * 
+	 * @throws RemoteException	In case a RMI exception occurred.
+	 */
+	Set<Address> exchangeKnownAddresses(Set<Address> remoteAddressesKnownByOtherRemote) throws RemoteException;
+
+	/**
+	 * A simple empty class which can be extended with additional fields to convey additional information.
+	 */
+	public interface IMessage extends Serializable { }
+	
+}

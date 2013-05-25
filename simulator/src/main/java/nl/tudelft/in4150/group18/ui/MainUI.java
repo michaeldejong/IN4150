@@ -21,31 +21,31 @@ import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
 
-import nl.tudelft.in4150.group18.DistributedAlgorithm;
 import nl.tudelft.in4150.group18.NodeController;
+import nl.tudelft.in4150.group18.SynchronousDistributedAlgorithm;
 import nl.tudelft.in4150.group18.network.Address;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @SuppressWarnings("serial")
-public class MainUI extends JFrame {
+public class MainUI<R> extends JFrame {
 	
 	private static final Logger log = LoggerFactory.getLogger(MainUI.class);
 	
 	private final Timer timer;
 	private final LocalAddressPanel myAddressPanel;
-	private final NodeController main;
+	private final NodeController<R> main;
 	private final JTextArea remotesPanel;
 	
-	public MainUI(boolean localOnly, InetAddress localAddress, DistributedAlgorithm algorithm) throws IOException {
+	public MainUI(boolean localOnly, InetAddress localAddress, SynchronousDistributedAlgorithm<R> algorithm) throws IOException {
 		setTitle("IN4150: Distributed algorithms - Group 18");
 		setSize(500, 400);
 		setLocation(100, 100);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		this.timer = new Timer(true);
-		this.main = new NodeController(localAddress, localOnly, algorithm);
+		this.main = new NodeController<R>(localAddress, localOnly, algorithm);
 		this.myAddressPanel = new LocalAddressPanel();
 		this.myAddressPanel.setLocalAddress(main.getLocalAddress());
 		this.remotesPanel = new JTextArea();
