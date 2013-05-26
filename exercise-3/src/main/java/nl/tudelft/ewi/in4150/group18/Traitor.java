@@ -1,10 +1,13 @@
 package nl.tudelft.ewi.in4150.group18;
 
+import java.util.List;
 import java.util.Set;
 
 import nl.tudelft.ewi.in4150.group18.Command.Type;
-import nl.tudelft.in4150.group18.common.IRemoteRequest.IRequest;
 import nl.tudelft.in4150.group18.network.Address;
+
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 public class Traitor extends Lieutenant {
 
@@ -13,23 +16,27 @@ public class Traitor extends Lieutenant {
 	}
 
 	@Override
-	public Type onRequest(IRequest message, Address from) {
-		if (message instanceof Command) {
-			Command command = (Command) message;
-			int maximumFaults = command.getMaximumFaults() - 1;
-			Set<Address> remaining = command.getRemaining();
-			Type content = command.getType();
-			
-			if (content.equals(Type.ATTACK)) {
-				content = Type.RETREAT;
-			} 
-			else {
-				content = Type.ATTACK;
-			}
-			
-			return super.onRequest(new Command(maximumFaults, content, remaining), from);
+	protected Type handleCommand(Command message, Address from) {
+		List<Address> path = Lists.newArrayList();
+		path.addAll(message.getPath());
+		path.add(getLocalAddress());
+		
+		Set<Address> remaining = Sets.newHashSet();
+		remaining.addAll(getRemoteAddresses());
+		remaining.removeAll(message.getPath());
+		remaining.remove(getLocalAddress());
+		
+		if (message.getMaximumFaults() > 0){
+			int maximumFaults = message.getMaximumFaults() - 1;
+			multicast(new Command(maximumFaults, Type.RETREAT, path), remaining, getTimeout(), null);
 		}
-		return null;
+		
+		return Type.RETREAT;
+	}
+
+	@Override
+	protected void printDecision() {
+		System.err.println(getLocalAddress() + " - I'm a traitor, don't trust me!");
 	}
 	
 }

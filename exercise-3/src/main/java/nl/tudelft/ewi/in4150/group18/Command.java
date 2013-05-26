@@ -1,6 +1,6 @@
 package nl.tudelft.ewi.in4150.group18;
 
-import java.util.Set;
+import java.util.List;
 
 import nl.tudelft.in4150.group18.common.IRemoteMessage.IMessage;
 import nl.tudelft.in4150.group18.common.IRemoteRequest.IRequest;
@@ -15,12 +15,12 @@ public class Command implements IMessage, IRequest {
 
 	private int maximumFaults;
 	private Type type;
-	private Set<Address> remainingLieutenants;
+	private List<Address> path;
 
-	public Command(int maximumFaults, Type type, Set<Address> remainingLieutenants) {
+	public Command(int maximumFaults, Type type, List<Address> path) {
 		this.maximumFaults = maximumFaults;
 		this.type = type;
-		this.remainingLieutenants = remainingLieutenants;
+		this.path = path;
 	}
 
 	public int getMaximumFaults() {
@@ -31,17 +31,28 @@ public class Command implements IMessage, IRequest {
 		return type;
 	}
 
-	public Set<Address> getRemaining() {
-		return remainingLieutenants;
+	public List<Address> getPath() {
+		return path;
 	}
 	
 	@Override
 	public String toString() {
-		return "[" + maximumFaults + ", " + type + ", [" + Joiner.on(",").join(remainingLieutenants) + "]]";
+		return "[" + maximumFaults + ", " + type + ", [" + Joiner.on(",").join(path) + "]]";
 	}
 	
 	public enum Type {
-		ATTACK, RETREAT;
+		ATTACK {
+			public Type opposite() {
+				return RETREAT;
+			}
+		}, 
+		RETREAT {
+			public Type opposite() {
+				return ATTACK;
+			}
+		};
+
+		public abstract Type opposite();
 	}
 
 }

@@ -1,5 +1,6 @@
 package nl.tudelft.ewi.in4150.group18;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -11,15 +12,15 @@ import nl.tudelft.in4150.group18.SynchronousDistributedAlgorithm;
 import nl.tudelft.in4150.group18.common.IRemoteRequest.IRequest;
 import nl.tudelft.in4150.group18.network.Address;
 
-import com.google.common.collect.Maps;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 public class Lieutenant extends SynchronousDistributedAlgorithm<Type> {
 
 	private final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
 	private final AtomicBoolean startedProcess = new AtomicBoolean();
+	private final ReceivedCommandsTracker tracker = new ReceivedCommandsTracker();
 	
-	private final Map<Address, Type> received = Maps.newHashMap();
 	private final Type defaultCommand;
 	
 	private int maximumFaults = 1;
@@ -37,11 +38,15 @@ public class Lieutenant extends SynchronousDistributedAlgorithm<Type> {
 	public void setTimeout(int millis) {
 		this.timeout = millis;
 	}
+	
+	public int getTimeout() {
+		return timeout;
+	}
 
 	@Override
 	public void start() {
 		System.err.println(getLocalAddress() + " - (COMMANDER) - I'm ordering: " + defaultCommand);
-		broadcast(new Command(maximumFaults, defaultCommand, Sets.newHashSet(getRemoteAddresses())), timeout, defaultCommand);
+		broadcast(new Command(maximumFaults, defaultCommand, Lists.newArrayList(getLocalAddress())), timeout, defaultCommand);
 	}
 
 	@Override
@@ -58,13 +63,20 @@ public class Lieutenant extends SynchronousDistributedAlgorithm<Type> {
 			return;
 		}
 		
-		final String name = getClass().getSimpleName();
 		executor.schedule(new Runnable() {
 			@Override
 			public void run() {
-				System.err.println(getLocalAddress() + " - (" + name + ") - I decided to: " + majority(received) + " - (" + enumerate(received) + ")");
+				printDecision();
 			}
 		}, decisionTimeout, TimeUnit.MILLISECONDS);
+	}
+
+	protected void printDecision() {
+		System.err.println(getLocalAddress() + " - (" + getClass().getSimpleName() + ") - I decided to: " 
+				+ tracker.decide() + " - (A:" + tracker.count(Type.ATTACK) + "/R:" + tracker.count(Type.RETREAT) + ")");
+		
+		tracker.clear();
+		startedProcess.set(false);
 	}
 
 	/**
@@ -87,26 +99,31 @@ public class Lieutenant extends SynchronousDistributedAlgorithm<Type> {
 	 * @param message	the {@link Command} the lieutenant receives from the commander.
 	 * @param from		the {@link Address} he receives it from (commander).
 	 */
-	private Type handleCommand(Command message, Address from) {
-		received.put(from, message.getType());
+	protected Type handleCommand(Command message, Address from) {
+		tracker.processCommand(message, from);
 		
-		Set<Address> remaining = Sets.newHashSet(getRemoteAddresses());
-		remaining.removeAll(message.getRemaining());
+		List<Address> path = Lists.newArrayList();
+		path.addAll(message.getPath());
+		path.add(getLocalAddress());
+		
+		Set<Address> remaining = Sets.newHashSet();
+		remaining.addAll(getRemoteAddresses());
+		remaining.removeAll(message.getPath());
 		remaining.remove(getLocalAddress());
 		
 		if (message.getMaximumFaults() > 0){
 			int maximumFaults = message.getMaximumFaults() - 1;
 			Type content = message.getType();
 
-			Map<Address, Type> responses = multicast(new Command(maximumFaults, content, remaining), remaining, timeout, defaultCommand);
+			Map<Address, Type> responses = multicast(new Command(maximumFaults, content, path), remaining, timeout, defaultCommand);
 			responses.put(from, message.getType());
 			return majority(responses);
 		}
-		
+
 		return message.getType();
 	}
 
-	private Type majority(Map<Address, Type> responses) {
+	protected Type majority(Map<Address, Type> responses) {
 		int attack = 0;
 		int retreat = 0;
 		for (Type type : responses.values()) {
@@ -120,7 +137,7 @@ public class Lieutenant extends SynchronousDistributedAlgorithm<Type> {
 		return attack >= retreat ? Type.ATTACK : Type.RETREAT;
 	}
 
-	private String enumerate(Map<Address, Type> responses) {
+	protected String enumerate(Map<Address, Type> responses) {
 		int attack = 0;
 		int retreat = 0;
 		for (Type type : responses.values()) {
