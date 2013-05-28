@@ -9,10 +9,10 @@ import nl.tudelft.in4150.group18.Simulator;
 
 public class Main {
 
-	private static final int GENERALS = 10;
-	private static final int FAULTY = 7;
-	private static final int TRAITORS = 0;
-	private static final int MAX_FAULTS = 1;
+	private static final int GENERALS = 6;
+	private static final int FAULTY = 1;
+	private static final int TRAITORS = 1;
+	private static final int MAX_FAULTS = 2;
 	
 	private static final ThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(GENERALS);
 	

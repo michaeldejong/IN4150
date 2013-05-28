@@ -20,7 +20,7 @@ public class Faulty extends Lieutenant {
 			List<Address> path = command.getPath();
 			Type content = command.getType();
 			
-			if (Math.random() < 0.75) { // reverse order
+			if (Math.random() < 0.50) { // reverse order
 				content = command.getType().opposite();
 			} 
 			

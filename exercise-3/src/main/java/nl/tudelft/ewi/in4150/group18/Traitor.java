@@ -33,10 +33,5 @@ public class Traitor extends Lieutenant {
 		
 		return Type.RETREAT;
 	}
-
-	@Override
-	protected void printDecision() {
-		System.err.println(getLocalAddress() + " - I'm a traitor, don't trust me!");
-	}
 	
 }

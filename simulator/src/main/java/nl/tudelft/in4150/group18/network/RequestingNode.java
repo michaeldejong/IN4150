@@ -40,7 +40,7 @@ public class RequestingNode<I extends IRemoteRequest<M, R>, M extends IRequest, 
 	
 	private static final Range<Integer> PORT_RANGE = Range.closed(1100, 1200);
 	private static final Logger log = LoggerFactory.getLogger(RequestingNode.class);
-	private static final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(20);
+	private final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
 	
 	private final Receiver receiver;
 	private final Map<Address, RemoteNode<I>> remotes;
@@ -186,7 +186,12 @@ public class RequestingNode<I extends IRemoteRequest<M, R>, M extends IRequest, 
 			Address address = notResponded.get(0);
 			Future<R> future = futures.get(address);
 			try {
-				responses.put(address, future.get(timeout, TimeUnit.MILLISECONDS));
+				if (timeout > 0) {
+					responses.put(address, future.get(timeout, TimeUnit.MILLISECONDS));
+				}
+				else {
+					responses.put(address, future.get());
+				}
 			} 
 			catch (Exception e) {
 				responses.put(address, defaultValue);
