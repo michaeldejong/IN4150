@@ -7,20 +7,36 @@ import java.util.concurrent.ThreadPoolExecutor;
 import nl.tudelft.ewi.in4150.group18.Command.Type;
 import nl.tudelft.in4150.group18.Simulator;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class Main {
 
+	private static final Logger log = LoggerFactory.getLogger(Main.class);
+	
 	private static final int GENERALS = 6;
 	private static final int FAULTY = 1;
-	private static final int TRAITORS = 1;
+	private static final int TRAITORS = 2;
 	private static final int MAX_FAULTS = 2;
 	
 	private static final ThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(GENERALS);
 	
 	public static void main(String[] args) throws IOException {
+		if (args.length == 0) {
+			run(GENERALS, FAULTY, TRAITORS, MAX_FAULTS);
+		}
+		else {
+			start(args);
+		}
+	}
+	
+	public static void run(int generals, int faulty, int traitors, int maxFaults) throws IOException {
+		if (generals < 3 * (faulty + traitors)) {
+			log.warn("Too many traitors or faulty processes to come to concensus!");
+		}
+		
 		startThreaded(new String[] { "--ui", "--local", "--default:attack" });
 		
-		int faulty = FAULTY;
-		int traitors = TRAITORS;
 		for (int i = 1; i < GENERALS; i++) {
 			if (faulty > 0) {
 				faulty--;
