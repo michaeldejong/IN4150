@@ -94,6 +94,10 @@ public class Lieutenant extends SynchronousDistributedAlgorithm<Type> {
 		this.maximumFaults = maximumFaults;
 	}
 	
+	public int getMaximumFaults() {
+		return maximumFaults;
+	}
+	
 	public void setTimeout(int millis) {
 		this.timeout = millis;
 	}
