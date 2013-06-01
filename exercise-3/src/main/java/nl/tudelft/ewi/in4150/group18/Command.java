@@ -7,6 +7,7 @@ import nl.tudelft.in4150.group18.common.IRemoteRequest.IRequest;
 import nl.tudelft.in4150.group18.network.Address;
 
 import com.google.common.base.Joiner;
+import com.google.common.base.Preconditions;
 
 public class Command implements IMessage, IRequest {
 
@@ -18,6 +19,9 @@ public class Command implements IMessage, IRequest {
 	private List<Address> path;
 
 	public Command(int maximumFaults, Type type, List<Address> path) {
+		if (path.isEmpty()) {
+			System.err.println();
+		}
 		this.maximumFaults = maximumFaults;
 		this.type = type;
 		this.path = path;

@@ -1,6 +1,7 @@
 package nl.tudelft.ewi.in4150.group18;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -52,10 +53,13 @@ public class Traitor extends Lieutenant {
 	}
 	
 	private void randomizedBroadcast() throws RemoteException {
+		Type send = Type.ATTACK;
+		ArrayList<Address> path = Lists.newArrayList(getLocalAddress());
+		
 		for (Address address : getRemoteAddresses()) {
-			Type order = Math.random() < 0.5 ? Type.ATTACK : Type.RETREAT;
-			log.info("Sending command: {} to: {}", order, address);
-			send(new Command(getMaximumFaults(), order, Lists.newArrayList(getLocalAddress())), address);
+			log.info("Sending command: {} to: {}", send, address);
+			sendAwait(new Command(getMaximumFaults(), send, path), address);
+			send = send.opposite();
 		}
 	}
 	

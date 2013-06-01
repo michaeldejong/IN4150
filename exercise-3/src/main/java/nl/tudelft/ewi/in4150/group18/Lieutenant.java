@@ -3,6 +3,8 @@ package nl.tudelft.ewi.in4150.group18;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import nl.tudelft.ewi.in4150.group18.Command.Type;
 import nl.tudelft.in4150.group18.SynchronousDistributedAlgorithm;
@@ -19,13 +21,17 @@ public class Lieutenant extends SynchronousDistributedAlgorithm<Type> {
 
 	private static final Logger log = LoggerFactory.getLogger(Lieutenant.class);
 	
+	private final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
+	
 	private final Type defaultCommand;
+	private final Collector collector;
 	
 	private int maximumFaults = 1;
 	private int timeout = 100;
 
 	public Lieutenant(Type defaultCommand) {
 		this.defaultCommand = defaultCommand;
+		this.collector = new Collector();
 	}
 	
 	@Override
@@ -59,11 +65,13 @@ public class Lieutenant extends SynchronousDistributedAlgorithm<Type> {
 	 * 
 	 * @param message	the {@link Command} the lieutenant receives from the commander.
 	 * @param from		the {@link Address} he receives it from (commander).
+	 * @throws InterruptedException 
 	 */
 	protected Type handleCommand(Command message, Address from) {
+		collector.collect(message.getType(), message.getPath());
+		
 		// Add self to path
-		List<Address> path = Lists.newArrayList();
-		path.addAll(message.getPath());
+		List<Address> path = Lists.newArrayList(message.getPath());
 		path.add(getLocalAddress());
 		
 		// Calculate remaining nodes
@@ -76,15 +84,20 @@ public class Lieutenant extends SynchronousDistributedAlgorithm<Type> {
 		if (message.getMaximumFaults() > 0){
 			int maximumFaults = message.getMaximumFaults() - 1;
 			Type content = message.getType();
+			collector.collect(content, path);
 
 			Map<Address, Type> responses = multicast(new Command(maximumFaults, content, path), remaining, timeout, defaultCommand);
 			responses.put(from, message.getType());
 			order = majority(responses, message.getType());
 			
 			if (message.getPath().size() == 1) {
-				if (getClass().equals(Lieutenant.class)) {
-					log.info(getLocalAddress() + " - (" + getClass().getSimpleName() + ") - I decided to: " + order + "(" + enumerate(responses) + ")");
-				}
+				final String type = getClass().getSimpleName();
+				executor.schedule(new Runnable() {
+					@Override
+					public void run() {
+						log.info("{} - ({}) - I decided to: {}", getLocalAddress(), type, collector.calculateMajority());
+					}
+				}, getTimeout() * getRemoteAddresses().size(), TimeUnit.MILLISECONDS);
 			}
 		}
 		return order;

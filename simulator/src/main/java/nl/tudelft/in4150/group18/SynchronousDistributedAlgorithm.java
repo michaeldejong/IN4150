@@ -3,6 +3,7 @@ package nl.tudelft.in4150.group18;
 import java.rmi.RemoteException;
 import java.util.Collection;
 import java.util.Map;
+import java.util.concurrent.Future;
 
 import nl.tudelft.in4150.group18.common.IRemoteRequest;
 import nl.tudelft.in4150.group18.common.IRemoteRequest.IRequest;
@@ -65,6 +66,10 @@ public abstract class SynchronousDistributedAlgorithm<R> {
 	 */
 	protected R send(IRequest content, Address address) throws RemoteException {
 		return node.sendNow(content, address);
+	}
+	
+	protected Future<R> sendAwait(IRequest content, Address address) throws RemoteException {
+		return node.send(content, address);
 	}
 	
 	/**
