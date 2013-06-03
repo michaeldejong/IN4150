@@ -15,19 +15,18 @@ The Lamport, Pease and Shostak algorithm is designed for reaching consensus in a
 * On receiving message `(order, f, path)`:
 	1. Multicast `(order, f-1, path + my_id)` to everyone not yet in path.
 	2. Collect responses, use default (retreat) if a reply is not received in time.
-	3. Determine the majority of responses (attack or response), and return this.
+	3. Determine the majority of responses (attack or retreat), and return this.
 
-### Test cases
-
-
-
-* list the test cases of your program
-* including the numbers of messages sent/received
-* and the upper and lower bound on the expected number of messages.
-* whereas of course the final result of your program is consensus, for the cases in which the numbers of faulty processes is too high, report the input values of the correct processes and their decisions.
+#### Making a decision
+As soon as all the messages have been sent (or timed-out), it is time to decide on what all the loyal lieutenants should do (attack or retreat). To ensure that they all reach the same decision, each lieutentant records all received and sent messages in a tree format using the path variable found in each message. By reducing this tree recursively we can decide on a single value (attack or retreat). It's guaranteed that all loyal lieutenants will reach this same value.
 
 ### Results
 
-* Table 
+| Commander | F | Loyal | Traitors | Faulty | Expected | Sent | Decision | Unanimous |
+|-----------|---|-------|----------|--------|----------|------|----------|-----------|
+|LOYAL      | 1 |1      |1         |0       |4         |      |          |           |
+|TRAITOR    | 1 |1      |0         |0       |4         |      |          |           |
+|LOYAL      | 1 |2      |1         |0       |9         |      |          |           |
+|LOYAL      | 1 |3      |2         |0       |25        |      |          |           |
 
 ### Conclusion
