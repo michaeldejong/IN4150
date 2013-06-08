@@ -145,7 +145,7 @@ public class RequestingNode<I extends IRemoteRequest<M, R>, M extends IRequest, 
 		waitUntilAllowedToSend();
 		
 		try {
-			log.debug(getLocalAddress() + " - Sending {}: {} to: {}", message.getClass().getSimpleName(), message, to);
+			log.info(getLocalAddress() + " - Sending {}: {} to: {}", message.getClass().getSimpleName(), message, to);
 			return getRemote(to).onRequest(message, getLocalAddress());
 		}
 		catch (RemoteException e) {

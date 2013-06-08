@@ -20,13 +20,23 @@ The Lamport, Pease and Shostak algorithm is designed for reaching consensus in a
 #### Making a decision
 As soon as all the messages have been sent (or timed-out), it is time to decide on what all the loyal lieutenants should do (attack or retreat). To ensure that they all reach the same decision, each lieutentant records all received and sent messages in a tree format using the path variable found in each message. By reducing this tree recursively we can decide on a single value (attack or retreat). It's guaranteed that all loyal lieutenants will reach this same value.
 
+### Test cases
+
+| Case | Commander | F | Loyal lieutenants | Traitors | Faulty | Expected messages |
+|------|-----------|---|-------------------|----------|--------|-------------------|
+| 1    | LOYAL     | 1 | 1                 | 1        | 0      | 4                 |
+| 2    | TRAITOR   | 1 | 2                 | 0        | 0      | 4                 |
+| 3    | LOYAL     | 1 | 2                 | 1        | 0      | 9                 |
+| 4    | LOYAL     | 1 | 2                 | 0        | 1      | 7-9               |
+| 5    | LOYAL     | 1 | 3                 | 2        | 0      | 25                |
+| 6    | LOYAL     | 1 | 3                 | 0        | 2      | 17-25             |
+| 7    | LOYAL     | 1 | 2                 | 0        | 3      | 13-25             |
+| 8    | LOYAL     | 2 | 2                 | 0        | 3      | 19-70             |
+
 ### Results
 
-| Commander | F | Loyal | Traitors | Faulty | Expected | Sent | Decision | Unanimous |
-|-----------|---|-------|----------|--------|----------|------|----------|-----------|
-|LOYAL      | 1 |1      |1         |0       |4         |      |          |           |
-|TRAITOR    | 1 |1      |0         |0       |4         |      |          |           |
-|LOYAL      | 1 |2      |1         |0       |9         |      |          |           |
-|LOYAL      | 1 |3      |2         |0       |25        |      |          |           |
+#### Test case 1
+
+
 
 ### Conclusion

@@ -42,7 +42,7 @@ public class Lieutenant extends SynchronousDistributedAlgorithm<Type> {
 
 	@Override
 	public Type onRequest(IRequest message, Address from) {
-		if (message instanceof Command) {
+		if (message != null && message instanceof Command) {
 			return handleCommand((Command) message, from);
 		}
 		return null;
@@ -84,11 +84,11 @@ public class Lieutenant extends SynchronousDistributedAlgorithm<Type> {
 		if (message.getMaximumFaults() > 0){
 			int maximumFaults = message.getMaximumFaults() - 1;
 			Type content = message.getType();
-			collector.collect(content, path);
-
+			
 			Map<Address, Type> responses = multicast(new Command(maximumFaults, content, path), remaining, timeout, defaultCommand);
 			responses.put(from, message.getType());
 			order = majority(responses, message.getType());
+			collector.collect(order, path);
 			
 			if (message.getPath().size() == 1) {
 				final String type = getClass().getSimpleName();
@@ -128,10 +128,6 @@ public class Lieutenant extends SynchronousDistributedAlgorithm<Type> {
 		return attack > retreat ? Type.ATTACK : Type.RETREAT;
 	}
 
-	private String enumerate(Map<Address, Type> responses) {
-		return "A: " + count(responses, Type.ATTACK) + "/R: " + count(responses, Type.RETREAT);
-	}
-	
 	private int count(Map<?, Type> responses, Type needle) {
 		int count = 0;
 		for (Type type : responses.values()) {

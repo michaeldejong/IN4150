@@ -46,7 +46,7 @@ public class Traitor extends Lieutenant {
 		Type order = message.getType().opposite();
 		if (message.getMaximumFaults() > 0){
 			int maximumFaults = message.getMaximumFaults() - 1;
-			multicast(new Command(maximumFaults, order, path), remaining, getTimeout(), null);
+			multicastWrongValues(maximumFaults, path, remaining);
 		}
 		
 		return order;
@@ -57,9 +57,19 @@ public class Traitor extends Lieutenant {
 		ArrayList<Address> path = Lists.newArrayList(getLocalAddress());
 		
 		for (Address address : getRemoteAddresses()) {
-			log.info("Sending command: {} to: {}", send, address);
 			sendAwait(new Command(getMaximumFaults(), send, path), address);
 			send = send.opposite();
+		}
+	}
+	
+	private void multicastWrongValues(int maxFaults, List<Address> path, Set<Address> remaining) {
+		for (Address address : remaining) {
+			try {
+				Type send = address.getPort() % 2 == 1 ? Type.ATTACK : Type.RETREAT;
+				sendAwait(new Command(maxFaults, send, path), address);
+			} catch (RemoteException e) {
+				log.error(e.getMessage(), e);
+			}
 		}
 	}
 	

@@ -14,9 +14,9 @@ public class Main {
 
 	private static final Logger log = LoggerFactory.getLogger(Main.class);
 	
-	private static final int GENERALS = 6;
-	private static final int FAULTY = 3;
-	private static final int TRAITORS = 0;
+	private static final int GENERALS = 4;
+	private static final int FAULTY = 0;
+	private static final int TRAITORS = 1;
 	private static final int MAX_FAULTS = 1;
 	
 	private static final ThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(GENERALS);
@@ -26,7 +26,7 @@ public class Main {
 			run(GENERALS, FAULTY, TRAITORS, MAX_FAULTS);
 		}
 		else {
-			start(args);
+			start(args, MAX_FAULTS);
 		}
 	}
 	
@@ -35,24 +35,24 @@ public class Main {
 			log.warn("Too many traitors or faulty processes to come to concensus!");
 		}
 		
-		startThreaded(new String[] { "--ui", "--local", "--default:attack" });
+		startThreaded(new String[] { "--ui", "--local", "--default:attack" }, maxFaults);
 		
 		for (int i = 1; i < GENERALS; i++) {
 			if (faulty > 0) {
 				faulty--;
-				startThreaded(new String[] { "--local", "--default:retreat", "--faulty" });
+				startThreaded(new String[] { "--local", "--default:retreat", "--faulty" }, maxFaults);
 			}
 			else if (traitors > 0) {
 				traitors--;
-				startThreaded(new String[] { "--local", "--default:retreat", "--traitor" });
+				startThreaded(new String[] { "--local", "--default:retreat", "--traitor" }, maxFaults);
 			}
 			else {
-				startThreaded(new String[] { "--local", "--default:retreat" });
+				startThreaded(new String[] { "--local", "--default:retreat" }, maxFaults);
 			}
 		}
 	}
 
-	private static void start(String[] args) throws IOException {
+	private static void start(String[] args, int maxFaults) throws IOException {
 		Type command = Simulator.containsParam(args, "--default:attack") ? Type.ATTACK : Type.RETREAT;
 		
 		Lieutenant lieutenant;
@@ -64,16 +64,16 @@ public class Main {
 			lieutenant = new Lieutenant(command);
 		}
 		
-		lieutenant.setMaximumFaults(MAX_FAULTS);
+		lieutenant.setMaximumFaults(maxFaults);
 		Simulator.start(lieutenant, args);
 	}
 	
-	private static void startThreaded(final String[] args) {
+	private static void startThreaded(final String[] args, final int maxFaults) {
 		executor.submit(new Runnable() {
 			@Override
 			public void run() {
 				try {
-					start(args);
+					start(args, maxFaults);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
