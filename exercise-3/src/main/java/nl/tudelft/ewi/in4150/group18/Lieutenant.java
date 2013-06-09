@@ -11,7 +11,7 @@ import nl.tudelft.ewi.in4150.group18.Command.Type;
 import nl.tudelft.in4150.group18.SynchronousDistributedAlgorithm;
 import nl.tudelft.in4150.group18.common.IRemoteRequest.IRequest;
 import nl.tudelft.in4150.group18.network.Address;
-import nl.tudelft.in4150.group18.ui.GraphDialog;
+import nl.tudelft.in4150.group18.ui.GraphView;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,7 +71,7 @@ public class Lieutenant extends SynchronousDistributedAlgorithm<Type> {
 	 */
 	protected Type handleCommand(Command message, Address from) {
 		// Set color of graph node
-		GraphDialog.getInstance().setVertexColor("" + getLocalAddress().getPort(), Color.blue);
+		GraphView.getInstance().setVertexColor("" + getLocalAddress().getPort(), Color.blue);
 		
 		collector.collect(message.getType(), message.getPath());
 		

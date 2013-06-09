@@ -14,6 +14,7 @@ import java.util.TimerTask;
 import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -109,17 +110,14 @@ public class MainUI<R> extends JFrame {
 			}
 		});
 		
-	    final JButton graph = new JButton("Show graph");
-	    graph.addActionListener(new ActionListener() {
-	      @Override
-	      public void actionPerformed(ActionEvent e) {
-	    	GraphDialog.getInstance().setLocation(
-	            (int) MainUI.this.getLocation().getX() + MainUI.this.getWidth(),
-	            (int) MainUI.this.getLocation().getY());
-	        GraphDialog.getInstance().setVisible(true);
-	        GraphDialog.getInstance().position();
-	      }
-	    });
+		final JButton graph = new JButton("Show graph");
+		graph.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				GraphView.getInstance().position();
+				GraphView.getInstance().setVisible(true);
+			}
+		});
 		
 		final JButton start = new JButton("Start algorithm");
 		start.addActionListener(new ActionListener() {
@@ -194,5 +192,4 @@ public class MainUI<R> extends JFrame {
 		}
 		remotesPanel.setText(builder.toString());
 	}
-
 }

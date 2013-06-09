@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 
 import nl.tudelft.in4150.group18.common.IRemoteRequest;
 import nl.tudelft.in4150.group18.common.IRemoteRequest.IRequest;
-import nl.tudelft.in4150.group18.ui.GraphDialog;
+import nl.tudelft.in4150.group18.ui.GraphView;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -148,7 +148,7 @@ public class RequestingNode<I extends IRemoteRequest<M, R>, M extends IRequest, 
 		try {
 			log.info(getLocalAddress() + " - Sending {}: {} to: {}", message.getClass().getSimpleName(), message, to);
 			
-			GraphDialog.getInstance().addEdge("" + getLocalAddress().getPort(), "" + to.getPort(), message.toString());
+			GraphView.getInstance().addEdge("" + getLocalAddress().getPort(), "" + to.getPort(), message.toString());
 			
 			return getRemote(to).onRequest(message, getLocalAddress());
 		}

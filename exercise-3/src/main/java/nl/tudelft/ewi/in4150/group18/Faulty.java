@@ -6,7 +6,7 @@ import java.util.List;
 import nl.tudelft.ewi.in4150.group18.Command.Type;
 import nl.tudelft.in4150.group18.common.IRemoteRequest.IRequest;
 import nl.tudelft.in4150.group18.network.Address;
-import nl.tudelft.in4150.group18.ui.GraphDialog;
+import nl.tudelft.in4150.group18.ui.GraphView;
 
 public class Faulty extends Lieutenant {
 
@@ -18,7 +18,7 @@ public class Faulty extends Lieutenant {
 	public Type onRequest(IRequest message, Address from) {
 		
 		// Set color of graph node
-		GraphDialog.getInstance().setVertexColor("" + getLocalAddress().getPort(), Color.yellow);
+		GraphView.getInstance().setVertexColor("" + getLocalAddress().getPort(), Color.yellow);
 		
 		if (message instanceof Command) {
 			Command command = (Command) message;
