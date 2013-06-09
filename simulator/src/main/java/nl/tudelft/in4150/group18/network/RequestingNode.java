@@ -18,6 +18,7 @@ import java.util.concurrent.TimeUnit;
 
 import nl.tudelft.in4150.group18.common.IRemoteRequest;
 import nl.tudelft.in4150.group18.common.IRemoteRequest.IRequest;
+import nl.tudelft.in4150.group18.ui.GraphDialog;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +39,7 @@ import com.google.common.collect.Sets;
  */
 public class RequestingNode<I extends IRemoteRequest<M, R>, M extends IRequest, R> {
 	
-	private static final Range<Integer> PORT_RANGE = Range.closed(1100, 1200);
+	private static final Range<Integer> PORT_RANGE = Range.closed(1100, 1111);
 	private static final Logger log = LoggerFactory.getLogger(RequestingNode.class);
 	
 	private final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(10);
@@ -146,6 +147,9 @@ public class RequestingNode<I extends IRemoteRequest<M, R>, M extends IRequest, 
 		
 		try {
 			log.info(getLocalAddress() + " - Sending {}: {} to: {}", message.getClass().getSimpleName(), message, to);
+			
+			GraphDialog.getInstance().addEdge("" + getLocalAddress().getPort(), "" + to.getPort(), message.toString());
+			
 			return getRemote(to).onRequest(message, getLocalAddress());
 		}
 		catch (RemoteException e) {

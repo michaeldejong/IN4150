@@ -40,7 +40,7 @@ public class MainUI<R> extends JFrame {
 	
 	public MainUI(boolean localOnly, InetAddress localAddress, SynchronousDistributedAlgorithm<R> algorithm) throws IOException {
 		setTitle("IN4150: Distributed algorithms - Group 18");
-		setSize(500, 400);
+		setSize(570, 400);
 		setLocation(100, 100);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -109,6 +109,18 @@ public class MainUI<R> extends JFrame {
 			}
 		});
 		
+	    final JButton graph = new JButton("Show graph");
+	    graph.addActionListener(new ActionListener() {
+	      @Override
+	      public void actionPerformed(ActionEvent e) {
+	    	GraphDialog.getInstance().setLocation(
+	            (int) MainUI.this.getLocation().getX() + MainUI.this.getWidth(),
+	            (int) MainUI.this.getLocation().getY());
+	        GraphDialog.getInstance().setVisible(true);
+	        GraphDialog.getInstance().position();
+	      }
+	    });
+		
 		final JButton start = new JButton("Start algorithm");
 		start.addActionListener(new ActionListener() {
 			@Override
@@ -132,6 +144,8 @@ public class MainUI<R> extends JFrame {
 								.addGap(10)
 								.addComponent(add)
 								.addGap(10)
+								.addComponent(graph)
+								.addGap(10)
 								.addComponent(start)
 						)
 				)
@@ -146,6 +160,7 @@ public class MainUI<R> extends JFrame {
 				.addGroup(layout.createParallelGroup()
 						.addComponent(autoDetect)
 						.addComponent(add)
+						.addComponent(graph)
 						.addComponent(start)
 				)
 				.addGap(10));
