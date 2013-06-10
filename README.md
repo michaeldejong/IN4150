@@ -33,6 +33,10 @@ As soon as all the messages have been sent (or timed-out), it is time to decide 
 | 7    | LOYAL     | 1 | 2                 | 0        | 3      | 13-25             |
 | 8    | LOYAL     | 1 | 2                 | 0        | 4      | 16-36             |
 | 9    | LOYAL     | 2 | 2                 | 0        | 4      | 24-156            |
+| 10   | LOYAL     | 2 | 8                 | 0-5      | 0      | 259               |
+| 11   | LOYAL     | 2 | 8                 | 0        | 0-5    | 50-259            |
+| 12   | LOYAL     | 2 | 16                | 0        | 0-8    | 50-2000           |
+| 13   | LOYAL     | 0-4 | 24              | 1        | 0      | 23-?              |
 
 In the following 9 testcases the amount of messages and decision is shown.
 The amount of messages will vary if faulty processes are in the mix.
@@ -282,6 +286,9 @@ This results in more errors in messages and the results show this.
 |------|-----------|---|-------------------|
 |  10  | LOYAL     | 2 | 8                 |
 
+#####Graph
+![graph10](https://github.com/michaeldejong/IN4150/blob/master/images/test10.PNG?raw=true)
+The amount of traitors is shown on the horizontal axis.
 
 | Traitors | Avg # messages | Avg Loyal Decision Correct |
 |----------|----------------|----------------------------|
@@ -293,22 +300,29 @@ This results in more errors in messages and the results show this.
 |     5    |      254       |              50%           |
 
 The percentage is the amount of loyal lieutenants that came to the correct decision regarding the command of the general.
+The drop in percentage is notable because it drops from 100% to 50% and stays there.
+This is most likely the effect of only counting the loyal lieutenants decision and the implementation of the traitor algorithm, that sends the same (traitorous) value to the same clients based on port number.
 
 #### Test case 11
 | Runs | Commander | F | Loyal lieutenants |
 |------|-----------|---|-------------------|
 |  10  | LOYAL     | 2 | 8                 |
 
+#####Graph
+![graph11](https://github.com/michaeldejong/IN4150/blob/master/images/test11.PNG?raw=true)
+The amount of faulty processes is shown on the horizontal axis.
 
-| Faulties | Loyal Decision Correct (%) |
-|----------|----------------------------|
-|     0    |                            |
-|     1    |                            |
-|     2    |                            |
-|     3    |                            |
-|     4    |                            |
-|     5    |                            |
+| Faulties | Avg # messages | Avg Loyal Decision Correct |
+|----------|----------------|----------------------------|
+|     0    |      259       |             100%           |
+|     1    |      244       |             100%           |
+|     2    |      219       |             100%           |
+|     3    |      183       |             100%           |
+|     4    |      157       |             100%           |
+|     5    |      121       |              10%           |
 
+As we saw earlier the results of faulty processes really seem too good to be true.
+Only beyond less than half of the lieutenants beying loyal and reliable the decisions become bad. 
 
 
 #### Test case 12
