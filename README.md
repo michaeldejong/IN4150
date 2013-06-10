@@ -207,4 +207,22 @@ As soon as all the messages have been sent (or timed-out), it is time to decide 
 | 9   | 61                | ATTACK                | YES       |
 | 10  | 57                | ATTACK                | YES       |
 
+#### Test case 10
+| Commander | F | Loyal lieutenants |
+|-----------|---|-------------------|
+| LOYAL     | 2 | 8                 |
+
+
+| Run | Traitors | Faulties | Decision             | Unanimous |
+|-----|----------|----------|----------------------|-----------|
+|  1  |     0    |     0    | ATTACK / **RETREAT** | **NO**    |
+|  1  |     0    |     0    | ATTACK / **RETREAT** | **NO**    |
+|  1  |     0    |     0    | ATTACK / **RETREAT** | **NO**    |
+|  1  |     0    |     0    | ATTACK / **RETREAT** | **NO**    |
+|  1  |     0    |     0    | ATTACK / **RETREAT** | **NO**    ||  1  |     0    |     0    | ATTACK / **RETREAT** | **NO**    |
+
+
+
+
+
 ### Conclusion
