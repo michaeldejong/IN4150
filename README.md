@@ -55,6 +55,7 @@ As soon as all the messages have been sent (or timed-out), it is time to decide 
 | 9   | 4                 | ATTACK   | YES       |
 | 10  | 4                 | ATTACK   | YES       |
 
+All the results are unanimous. The amount of traitors (1) is a third of everybody (1 loyal lieutenant and 1 traitor) but since we only look at the decision of loyal lieutenants the results are unanimous and correct.
 ![graph1](https://github.com/michaeldejong/IN4150/blob/master/images/test1to8.PNG?raw=true)
 
 
@@ -77,6 +78,7 @@ As soon as all the messages have been sent (or timed-out), it is time to decide 
 | 9   | 4                 | RETREAT  | YES       |
 | 10  | 4                 | RETREAT  | YES       |
 
+All the results are unanimous and correct since there are no traitors or faulties and the algorithm works.
 ![graph2](https://github.com/michaeldejong/IN4150/blob/master/images/test1to8.PNG?raw=true)
 
 
@@ -99,6 +101,8 @@ As soon as all the messages have been sent (or timed-out), it is time to decide 
 | 9   | 9                 | ATTACK   | YES       |
 | 10  | 9                 | ATTACK   | YES       |
 
+All the results are unanimous and correct because the algorithm can handle up to a third of everybody to not be loyal.
+It is 3-1 loyal vs. not loyal in this case (1 traitor).
 ![graph3](https://github.com/michaeldejong/IN4150/blob/master/images/test1to8.PNG?raw=true)
 
 
@@ -121,6 +125,8 @@ As soon as all the messages have been sent (or timed-out), it is time to decide 
 | 9   | 9                 | ATTACK   | YES       |
 | 10  | 7                 | ATTACK   | YES       |
 
+All the results are unanimous and correct because the algorithm can handle up to a third of everybody to not be loyal.
+It is 3-1 loyal vs. not loyal in this case (1 faulty).
 ![graph4](https://github.com/michaeldejong/IN4150/blob/master/images/test1to8.PNG?raw=true)
 
 
@@ -143,6 +149,9 @@ As soon as all the messages have been sent (or timed-out), it is time to decide 
 | 9   | 25                | ATTACK   | YES       |
 | 10  | 25                | ATTACK   | YES       |
 
+These results are notable since the algorithm is not guaranteed to be correct at or beyond a third of everybody not being loyal.
+It is 4-2 loyal vs. not loyal in this case zo exactly a third is not loyal (traitor in this case).
+What happens in this case depends on the implementation of the traitor algorithm.
 ![graph5](https://github.com/michaeldejong/IN4150/blob/master/images/test1to8.PNG?raw=true)
 
 
