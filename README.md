@@ -282,6 +282,8 @@ This results in more errors in messages and the results show this.
 |------|-----------|---|-------------------|
 |  10  | LOYAL     | 2 | 8                 |
 
+#####Graph
+![graph10](https://github.com/michaeldejong/IN4150/blob/master/images/test10.PNG?raw=true)
 
 | Traitors | Avg # messages | Avg Loyal Decision Correct |
 |----------|----------------|----------------------------|
@@ -301,6 +303,8 @@ This is most likely the effect of only counting the loyal lieutenants decision a
 |------|-----------|---|-------------------|
 |  10  | LOYAL     | 2 | 8                 |
 
+#####Graph
+![graph11](https://github.com/michaeldejong/IN4150/blob/master/images/test11.PNG?raw=true)
 
 | Faulties | Avg # messages | Avg Loyal Decision Correct |
 |----------|----------------|----------------------------|
