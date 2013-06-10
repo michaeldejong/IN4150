@@ -17,7 +17,7 @@ public class Main {
 	private static final boolean COMMANDER_IS_LOYAL = true;
 	private static final int GENERALS = 8;
 	private static final int FAULTY = 0;
-	private static final int TRAITORS = 4;
+	private static final int TRAITORS = 3;
 	private static final int MAX_FAULTS = 2;
 	
 	private static final ThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(GENERALS);

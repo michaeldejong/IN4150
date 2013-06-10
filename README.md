@@ -283,16 +283,16 @@ This results in more errors in messages and the results show this.
 |  10  | LOYAL     | 2 | 8                 |
 
 
-| Traitors | Avg # messages | Loyal Decision Correct |
-|----------|----------------|------------------------|
-|     0    |      259       |           100%         |
-|     1    |      259       |           100%         |
-|     2    |      259       |           100%         |
-|     3    |      259       |             0%         |
-|     4    |      259       |             0%         |
-|     5    |      259       |             0%         |
+| Traitors | Avg # messages | Avg Loyal Decision Correct |
+|----------|----------------|----------------------------|
+|     0    |      259       |             100%           |
+|     1    |      259       |             100%           |
+|     2    |      259       |             100%           |
+|     3    |      259       |              50%           |
+|     4    |      257       |              50%           |
+|     5    |      254       |              50%           |
 
-
+The percentage is the amount of loyal lieutenants that came to the correct decision regarding the command of the general.
 
 #### Test case 11
 | Runs | Commander | F | Loyal lieutenants |
@@ -342,3 +342,11 @@ This results in more errors in messages and the results show this.
 
 
 ### Conclusion
+
+Test cases 1 to 9 show the amount of messages being dependent on the amount of faulty processes.
+Also they showed that luck was on our side when the amount of faulty processes was going to half of the total amount of nodes.
+Only when there were more than half of faulty processes some cracks started to appear and wrong decisions showed up in our test results.
+
+In the test cases 10 to 13 we found out that the RMI system does not scale very well.
+The more messages we tried to send at the same time the worse the system responded (in a non linear way) causing RMI exceptions and timeouts in our algorithm.
+Problems already formed at F=3 for 10 nodes in total.
