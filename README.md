@@ -293,6 +293,8 @@ This results in more errors in messages and the results show this.
 |     5    |      254       |              50%           |
 
 The percentage is the amount of loyal lieutenants that came to the correct decision regarding the command of the general.
+The drop in percentage is notable because it drops from 100% to 50% and stays there.
+This is most likely the effect of only counting the loyal lieutenants decision and the implementation of the traitor algorithm, that sends the same (traitorous) value to the same clients based on port number.
 
 #### Test case 11
 | Runs | Commander | F | Loyal lieutenants |
