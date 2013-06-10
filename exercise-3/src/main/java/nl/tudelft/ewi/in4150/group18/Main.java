@@ -14,10 +14,10 @@ public class Main {
 
 	private static final Logger log = LoggerFactory.getLogger(Main.class);
 	
-	private static final int GENERALS = 7;
-	private static final int FAULTY = 4;
-	private static final int TRAITORS = 0;
-	private static final int MAX_FAULTS = 2;
+	private static final int GENERALS = 10;
+	private static final int FAULTY = 0;
+	private static final int TRAITORS = 2;
+	private static final int MAX_FAULTS = 3;
 	
 	private static final ThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(GENERALS);
 	
@@ -35,7 +35,7 @@ public class Main {
 			log.warn("Too many traitors or faulty processes to come to concensus!");
 		}
 		
-		startThreaded(new String[] { "--ui", "--local", "--default:attack" }, maxFaults);
+		startThreaded(new String[] { "--ui", "--local", "--default:attack", "--traitor" }, maxFaults);
 		
 		for (int i = 1; i < GENERALS; i++) {
 			if (faulty > 0) {
@@ -74,7 +74,7 @@ public class Main {
 			public void run() {
 				try {
 					start(args, maxFaults);
-				} catch (IOException e) {
+				} catch (Throwable e) {
 					e.printStackTrace();
 				}
 			}

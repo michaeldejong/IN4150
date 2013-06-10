@@ -2,22 +2,46 @@ package nl.tudelft.ewi.in4150.group18;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 import nl.tudelft.ewi.in4150.group18.Command.Type;
 import nl.tudelft.in4150.group18.network.Address;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
 
 public class Collector {
 	
-	private volatile Node root = null;
+	private static final Logger log = LoggerFactory.getLogger(Collector.class);
+
+	private final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
+	private final AtomicReference<Future<?>> future = new AtomicReference<>();
 	
 	private final Object lock = new Object();
+	private final AtomicReference<Address> localAddress = new AtomicReference<>();
 	
-	public void collect(Type value, List<Address> path) {
+	private volatile Node root = null;
+	
+	public void collect(Address local, Type value, List<Address> path) {
+		localAddress.compareAndSet(null, local);
 		synchronized (lock) {
+			if (future.get() != null) {
+				future.get().cancel(true);
+			}
+			future.set(executor.schedule(new Runnable() {
+				@Override
+				public void run() {
+					log.info("{} - I decided to: {}", localAddress.get(), calculateMajority());
+					clear();
+				}}, 1000, TimeUnit.MILLISECONDS));
+			
+			
 			if (root == null) {
 				Address key = path.get(0);
 				
@@ -40,11 +64,15 @@ public class Collector {
 		}
 	}
 	
+	public void clear() {
+		synchronized (lock) {
+			root = null;
+		}
+	}
+	
 	public Type calculateMajority() {
 		synchronized (lock) {
-			Type decision = calculateMajority(root);
-			root = null;
-			return decision;
+			return calculateMajority(root);
 		}
 	}
 	
