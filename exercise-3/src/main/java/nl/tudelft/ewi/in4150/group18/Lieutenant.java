@@ -3,8 +3,6 @@ package nl.tudelft.ewi.in4150.group18;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 import nl.tudelft.ewi.in4150.group18.Command.Type;
 import nl.tudelft.in4150.group18.SynchronousDistributedAlgorithm;
@@ -20,8 +18,6 @@ import com.google.common.collect.Sets;
 public class Lieutenant extends SynchronousDistributedAlgorithm<Type> {
 
 	private static final Logger log = LoggerFactory.getLogger(Lieutenant.class);
-	
-	private final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
 	
 	private final Type defaultCommand;
 	private final Collector collector;
@@ -68,7 +64,7 @@ public class Lieutenant extends SynchronousDistributedAlgorithm<Type> {
 	 * @throws InterruptedException 
 	 */
 	protected Type handleCommand(Command message, Address from) {
-		collector.collect(message.getType(), message.getPath());
+		collector.collect(getLocalAddress(), message.getType(), message.getPath());
 		
 		// Add self to path
 		List<Address> path = Lists.newArrayList(message.getPath());
@@ -88,17 +84,7 @@ public class Lieutenant extends SynchronousDistributedAlgorithm<Type> {
 			Map<Address, Type> responses = multicast(new Command(maximumFaults, content, path), remaining, timeout, defaultCommand);
 			responses.put(from, message.getType());
 			order = majority(responses, message.getType());
-			collector.collect(order, path);
-			
-			if (message.getPath().size() == 1) {
-				final String type = getClass().getSimpleName();
-				executor.schedule(new Runnable() {
-					@Override
-					public void run() {
-						log.info("{} - ({}) - I decided to: {}", getLocalAddress(), type, collector.calculateMajority());
-					}
-				}, getTimeout() * getRemoteAddresses().size(), TimeUnit.MILLISECONDS);
-			}
+			collector.collect(getLocalAddress(), order, path);
 		}
 		return order;
 	}
