@@ -16,10 +16,10 @@ public class Main {
 	
 	private static final int GENERALS = 10;
 	
-	private static final boolean COMMANDER_IS_LOYAL = false;
+	private static final boolean COMMANDER_IS_LOYAL = true;
 	private static final int FAULTY = 0;
-	private static final int TRAITORS = 5;
-	private static final int MAX_FAULTS = 2;
+	private static final int TRAITORS = 2;
+	private static final int MAX_FAULTS = 3;
 	
 	private static final ThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(GENERALS);
 	

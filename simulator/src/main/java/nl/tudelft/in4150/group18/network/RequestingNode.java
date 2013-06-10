@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
@@ -42,7 +43,7 @@ public class RequestingNode<I extends IRemoteRequest<M, R>, M extends IRequest, 
 	private static final Range<Integer> PORT_RANGE = Range.closed(1100, 1200);
 	private static final Logger log = LoggerFactory.getLogger(RequestingNode.class);
 	
-	private final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(10);
+	private final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(30);
 	private static final AtomicInteger sent = new AtomicInteger();
 	
 	private final Receiver receiver;
@@ -147,11 +148,12 @@ public class RequestingNode<I extends IRemoteRequest<M, R>, M extends IRequest, 
 		waitUntilAllowedToSend();
 		
 		try {
+			Thread.sleep(new Random().nextInt(100));
 			log.debug(getLocalAddress() + " - Sending {}: {} to: {}", message.getClass().getSimpleName(), message, to);
 			sent.incrementAndGet();
 			return getRemote(to).onRequest(message, getLocalAddress());
 		}
-		catch (RemoteException e) {
+		catch (Exception e) {
 			log.warn(getLocalAddress() + " - Remote doesn't seem to be online anymore.", e);
 			remotes.remove(to);
 		}

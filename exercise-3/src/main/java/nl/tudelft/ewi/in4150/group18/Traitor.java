@@ -66,7 +66,7 @@ public class Traitor extends Lieutenant {
 		for (Address address : remaining) {
 			try {
 				Type send = address.getPort() % 2 == 1 ? Type.ATTACK : Type.RETREAT;
-				sendAwait(new Command(maxFaults, send, path), address);
+				send(new Command(maxFaults, send, path), address);
 			} catch (RemoteException e) {
 				log.error(e.getMessage(), e);
 			}

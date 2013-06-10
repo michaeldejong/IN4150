@@ -29,8 +29,11 @@ public class Collector {
 	
 	private volatile Node root = null;
 
-	public Collector(Class<?> type) {
+	private int timeout;
+
+	public Collector(Class<?> type, int timeout) {
 		this.type = type;
+		this.timeout = timeout;
 	}
 	
 	public void collect(Address local, Type value, List<Address> path) {
@@ -46,7 +49,7 @@ public class Collector {
 						log.info("{} - ({}) - I decided to: {}", localAddress.get(), type.getSimpleName(), calculateMajority());
 						clear();
 					}
-				}, 1000, TimeUnit.MILLISECONDS));
+				}, timeout, TimeUnit.MILLISECONDS));
 			}
 			
 			if (root == null) {

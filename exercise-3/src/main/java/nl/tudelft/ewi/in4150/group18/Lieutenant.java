@@ -23,11 +23,11 @@ public class Lieutenant extends SynchronousDistributedAlgorithm<Type> {
 	private final Collector collector;
 	
 	private int maximumFaults = 1;
-	private int timeout = 10000;
+	private int timeout = 60000;
 
 	public Lieutenant(Type defaultCommand) {
 		this.defaultCommand = defaultCommand;
-		this.collector = new Collector(getClass());
+		this.collector = new Collector(getClass(), 5000);
 	}
 	
 	@Override
@@ -83,7 +83,7 @@ public class Lieutenant extends SynchronousDistributedAlgorithm<Type> {
 			int maximumFaults = message.getMaximumFaults() - 1;
 			Type content = message.getType();
 			
-			int modifiedTimeout = (int) (timeout * Math.pow(0.5, path.size()));
+			int modifiedTimeout = (int) (timeout * Math.pow(0.6, path.size() - 1));
 			Map<Address, Type> responses = multicast(new Command(maximumFaults, content, path), remaining, modifiedTimeout, defaultCommand);
 			responses.put(from, message.getType());
 			order = majority(responses, message.getType());
