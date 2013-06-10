@@ -284,6 +284,7 @@ This results in more errors in messages and the results show this.
 
 #####Graph
 ![graph10](https://github.com/michaeldejong/IN4150/blob/master/images/test10.PNG?raw=true)
+The amount of traitors is shown on the horizontal axis.
 
 | Traitors | Avg # messages | Avg Loyal Decision Correct |
 |----------|----------------|----------------------------|
@@ -305,6 +306,7 @@ This is most likely the effect of only counting the loyal lieutenants decision a
 
 #####Graph
 ![graph11](https://github.com/michaeldejong/IN4150/blob/master/images/test11.PNG?raw=true)
+The amount of faulty processes is shown on the horizontal axis.
 
 | Faulties | Avg # messages | Avg Loyal Decision Correct |
 |----------|----------------|----------------------------|
