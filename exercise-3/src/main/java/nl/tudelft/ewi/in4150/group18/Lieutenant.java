@@ -23,7 +23,7 @@ public class Lieutenant extends SynchronousDistributedAlgorithm<Type> {
 	private final Collector collector;
 	
 	private int maximumFaults = 1;
-	private int timeout = 10000;
+	private int timeout = 60*1000;
 
 	public Lieutenant(Type defaultCommand) {
 		this.defaultCommand = defaultCommand;

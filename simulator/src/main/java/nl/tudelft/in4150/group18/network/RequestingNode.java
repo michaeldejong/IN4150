@@ -39,7 +39,7 @@ import com.google.common.collect.Sets;
  */
 public class RequestingNode<I extends IRemoteRequest<M, R>, M extends IRequest, R> {
 	
-	private static final Range<Integer> PORT_RANGE = Range.closed(1100, 1200);
+	private static final Range<Integer> PORT_RANGE = Range.closed(1100, 1111);
 	private static final Logger log = LoggerFactory.getLogger(RequestingNode.class);
 	
 	private final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(10);

@@ -74,18 +74,18 @@ All the results are unanimous. The amount of traitors (1) is a third of everybod
 #####Unanimous
 ![graph2](https://github.com/michaeldejong/IN4150/blob/master/images/test1to8.PNG?raw=true)
 
-| Run | Number of message | Decision | Unanimous |
-|-----|-------------------|----------|-----------|
-| 1   | 4                 | RETREAT  | YES       |
-| 2   | 4                 | RETREAT  | YES       |
-| 3   | 4                 | RETREAT  | YES       |
-| 4   | 4                 | RETREAT  | YES       |
-| 5   | 4                 | RETREAT  | YES       |
-| 6   | 4                 | RETREAT  | YES       |
-| 7   | 4                 | RETREAT  | YES       |
-| 8   | 4                 | RETREAT  | YES       |
-| 9   | 4                 | RETREAT  | YES       |
-| 10  | 4                 | RETREAT  | YES       |
+| Run | Number of messages | Decision | Unanimous |
+|-----|--------------------|----------|-----------|
+| 1   | 4                  | RETREAT  | YES       |
+| 2   | 4                  | RETREAT  | YES       |
+| 3   | 4                  | RETREAT  | YES       |
+| 4   | 4                  | RETREAT  | YES       |
+| 5   | 4                  | RETREAT  | YES       |
+| 6   | 4                  | RETREAT  | YES       |
+| 7   | 4                  | RETREAT  | YES       |
+| 8   | 4                  | RETREAT  | YES       |
+| 9   | 4                  | RETREAT  | YES       |
+| 10  | 4                  | RETREAT  | YES       |
 
 All the results are unanimous and correct since there are no traitors or faulties and the algorithm works.
 
@@ -99,18 +99,18 @@ All the results are unanimous and correct since there are no traitors or faultie
 #####Unanimous
 ![graph3](https://github.com/michaeldejong/IN4150/blob/master/images/test1to8.PNG?raw=true)
 
-| Run | Number of message | Decision | Unanimous |
-|-----|-------------------|----------|-----------|
-| 1   | 9                 | ATTACK   | YES       |
-| 2   | 9                 | ATTACK   | YES       |
-| 3   | 9                 | ATTACK   | YES       |
-| 4   | 9                 | ATTACK   | YES       |
-| 5   | 9                 | ATTACK   | YES       |
-| 6   | 9                 | ATTACK   | YES       |
-| 7   | 9                 | ATTACK   | YES       |
-| 8   | 9                 | ATTACK   | YES       |
-| 9   | 9                 | ATTACK   | YES       |
-| 10  | 9                 | ATTACK   | YES       |
+| Run | Number of messages | Decision | Unanimous |
+|-----|--------------------|----------|-----------|
+| 1   | 9                  | ATTACK   | YES       |
+| 2   | 9                  | ATTACK   | YES       |
+| 3   | 9                  | ATTACK   | YES       |
+| 4   | 9                  | ATTACK   | YES       |
+| 5   | 9                  | ATTACK   | YES       |
+| 6   | 9                  | ATTACK   | YES       |
+| 7   | 9                  | ATTACK   | YES       |
+| 8   | 9                  | ATTACK   | YES       |
+| 9   | 9                  | ATTACK   | YES       |
+| 10  | 9                  | ATTACK   | YES       |
 
 All the results are unanimous and correct because the algorithm can handle up to a third of everybody to not be loyal.
 It is 3-1 loyal vs. not loyal in this case (1 traitor).
@@ -125,18 +125,18 @@ It is 3-1 loyal vs. not loyal in this case (1 traitor).
 #####Unanimous
 ![graph4](https://github.com/michaeldejong/IN4150/blob/master/images/test1to8.PNG?raw=true)
 
-| Run | Number of message | Decision | Unanimous |
-|-----|-------------------|----------|-----------|
-| 1   | 7                 | ATTACK   | YES       |
-| 2   | 7                 | ATTACK   | YES       |
-| 3   | 9                 | ATTACK   | YES       |
-| 4   | 9                 | ATTACK   | YES       |
-| 5   | 9                 | ATTACK   | YES       |
-| 6   | 7                 | ATTACK   | YES       |
-| 7   | 7                 | ATTACK   | YES       |
-| 8   | 9                 | ATTACK   | YES       |
-| 9   | 9                 | ATTACK   | YES       |
-| 10  | 7                 | ATTACK   | YES       |
+| Run | Number of messages | Decision | Unanimous |
+|-----|--------------------|----------|-----------|
+| 1   | 7                  | ATTACK   | YES       |
+| 2   | 7                  | ATTACK   | YES       |
+| 3   | 9                  | ATTACK   | YES       |
+| 4   | 9                  | ATTACK   | YES       |
+| 5   | 9                  | ATTACK   | YES       |
+| 6   | 7                  | ATTACK   | YES       |
+| 7   | 7                  | ATTACK   | YES       |
+| 8   | 9                  | ATTACK   | YES       |
+| 9   | 9                  | ATTACK   | YES       |
+| 10  | 7                  | ATTACK   | YES       |
 
 All the results are unanimous and correct because the algorithm can handle up to a third of everybody to not be loyal.
 It is 3-1 loyal vs. not loyal in this case (1 faulty).
@@ -151,18 +151,18 @@ It is 3-1 loyal vs. not loyal in this case (1 faulty).
 #####Unanimous
 ![graph5](https://github.com/michaeldejong/IN4150/blob/master/images/test1to8.PNG?raw=true)
 
-| Run | Number of message | Decision | Unanimous |
-|-----|-------------------|----------|-----------|
-| 1   | 25                | ATTACK   | YES       |
-| 2   | 25                | ATTACK   | YES       |
-| 3   | 25                | ATTACK   | YES       |
-| 4   | 25                | ATTACK   | YES       |
-| 5   | 25                | ATTACK   | YES       |
-| 6   | 25                | ATTACK   | YES       |
-| 7   | 25                | ATTACK   | YES       |
-| 8   | 25                | ATTACK   | YES       |
-| 9   | 25                | ATTACK   | YES       |
-| 10  | 25                | ATTACK   | YES       |
+| Run | Number of messages | Decision | Unanimous |
+|-----|--------------------|----------|-----------|
+| 1   | 25                 | ATTACK   | YES       |
+| 2   | 25                 | ATTACK   | YES       |
+| 3   | 25                 | ATTACK   | YES       |
+| 4   | 25                 | ATTACK   | YES       |
+| 5   | 25                 | ATTACK   | YES       |
+| 6   | 25                 | ATTACK   | YES       |
+| 7   | 25                 | ATTACK   | YES       |
+| 8   | 25                 | ATTACK   | YES       |
+| 9   | 25                 | ATTACK   | YES       |
+| 10  | 25                 | ATTACK   | YES       |
 
 These results are notable since the algorithm is not guaranteed to be correct at or beyond a third of everybody not being loyal.
 It is 4-2 loyal vs. not loyal in this case, so exactly a third is not loyal (traitors in this case).
@@ -178,18 +178,18 @@ What happens in this case depends on the implementation of the traitor algorithm
 #####Unanimous
 ![graph6](https://github.com/michaeldejong/IN4150/blob/master/images/test1to8.PNG?raw=true)
 
-| Run | Number of message | Decision | Unanimous |
-|-----|-------------------|----------|-----------|
-| 1   | 25                | ATTACK   | YES       |
-| 2   | 21                | ATTACK   | YES       |
-| 3   | 17                | ATTACK   | YES       |
-| 4   | 21                | ATTACK   | YES       |
-| 5   | 17                | ATTACK   | YES       |
-| 6   | 17                | ATTACK   | YES       |
-| 7   | 17                | ATTACK   | YES       |
-| 8   | 21                | ATTACK   | YES       |
-| 9   | 25                | ATTACK   | YES       |
-| 10  | 21                | ATTACK   | YES       |
+| Run | Number of messages | Decision | Unanimous |
+|-----|--------------------|----------|-----------|
+| 1   | 25                 | ATTACK   | YES       |
+| 2   | 21                 | ATTACK   | YES       |
+| 3   | 17                 | ATTACK   | YES       |
+| 4   | 21                 | ATTACK   | YES       |
+| 5   | 17                 | ATTACK   | YES       |
+| 6   | 17                 | ATTACK   | YES       |
+| 7   | 17                 | ATTACK   | YES       |
+| 8   | 21                 | ATTACK   | YES       |
+| 9   | 25                 | ATTACK   | YES       |
+| 10  | 21                 | ATTACK   | YES       |
 
 All the results are unanimous and correct because the algorithm can handle up to a third of everybody to not be loyal.
 It is 4-2 loyal vs. not loyal in this case (2 faulty).
@@ -204,18 +204,18 @@ It is 4-2 loyal vs. not loyal in this case (2 faulty).
 #####Unanimous
 ![graph7](https://github.com/michaeldejong/IN4150/blob/master/images/test1to8.PNG?raw=true)
 
-| Run | Number of message | Decision | Unanimous |
-|-----|-------------------|----------|-----------|
-| 1   | 13                | ATTACK   | YES       |
-| 2   | 17                | ATTACK   | YES       |
-| 3   | 21                | ATTACK   | YES       |
-| 4   | 13                | ATTACK   | YES       |
-| 5   | 25                | ATTACK   | YES       |
-| 6   | 21                | ATTACK   | YES       |
-| 7   | 17                | ATTACK   | YES       |
-| 8   | 21                | ATTACK   | YES       |
-| 9   | 25                | ATTACK   | YES       |
-| 10  | 17                | ATTACK   | YES       |
+| Run | Number of messages | Decision | Unanimous |
+|-----|--------------------|----------|-----------|
+| 1   | 13                 | ATTACK   | YES       |
+| 2   | 17                 | ATTACK   | YES       |
+| 3   | 21                 | ATTACK   | YES       |
+| 4   | 13                 | ATTACK   | YES       |
+| 5   | 25                 | ATTACK   | YES       |
+| 6   | 21                 | ATTACK   | YES       |
+| 7   | 17                 | ATTACK   | YES       |
+| 8   | 21                 | ATTACK   | YES       |
+| 9   | 25                 | ATTACK   | YES       |
+| 10  | 17                 | ATTACK   | YES       |
 
 These results are notable since the algorithm is not guaranteed to be correct at or beyond a third of everybody not being loyal.
 It is 3-3 loyal vs. not loyal in this case, so exactly half is not loyal (faulty processes in this case).
@@ -232,18 +232,18 @@ The amount of messages is varies a lot conseqently.
 #####Unanimous
 ![graph8](https://github.com/michaeldejong/IN4150/blob/master/images/test8.PNG?raw=true)
 
-| Run | Number of message | Decision              | Unanimous |
-|-----|-------------------|-----------------------|-----------|
-| 1   | 31                | ATTACK                | YES       |
-| 2   | 21                | ATTACK                | YES       |
-| 3   | 21                | ATTACK                | YES       |
-| 4   | 21                | ATTACK                | YES       |
-| 5   | 31                | ATTACK                | YES       |
-| 6   | 26                | **RETREAT**           | YES       |
-| 7   | 26                | ATTACK                | YES       |
-| 8   | 31                | ATTACK / **RETREAT**  | **NO**    |
-| 9   | 26                | ATTACK                | YES       |
-| 10  | 31                | ATTACK                | YES       |
+| Run | Number of messages | Decision              | Unanimous |
+|-----|--------------------|-----------------------|-----------|
+| 1   | 31                 | ATTACK                | YES       |
+| 2   | 21                 | ATTACK                | YES       |
+| 3   | 21                 | ATTACK                | YES       |
+| 4   | 21                 | ATTACK                | YES       |
+| 5   | 31                 | ATTACK                | YES       |
+| 6   | 26                 | **RETREAT**           | YES       |
+| 7   | 26                 | ATTACK                | YES       |
+| 8   | 31                 | ATTACK / **RETREAT**  | **NO**    |
+| 9   | 26                 | ATTACK                | YES       |
+| 10  | 31                 | ATTACK                | YES       |
 
 These results are expected since the algorithm is not guaranteed to be correct at or beyond a third of everybody not being loyal.
 It is 3-4 loyal vs. not loyal in this case so exactly half is not loyal (faulty processes in this case).
@@ -260,18 +260,18 @@ The results represent this probability well.
 #####Unanimous
 ![graph9](https://github.com/michaeldejong/IN4150/blob/master/images/test9.PNG?raw=true)
 
-| Run | Number of message | Decision              | Unanimous |
-|-----|-------------------|-----------------------|-----------|
-| 1   | 66                | **RETREAT**           | YES       |
-| 2   | 119               | ATTACK / **RETREAT**  | **NO**    |
-| 3   | 57                | ATTACK                | YES       |
-| 4   | 62                | **RETREAT**           | YES       |
-| 5   | 99                | ATTACK                | YES       |
-| 6   | 40                | ATTACK / **RETREAT**  | **NO**    |
-| 7   | 103               | ATTACK                | YES       |
-| 8   | 70                | ATTACK / **RETREAT**  | **NO**    |
-| 9   | 61                | ATTACK                | YES       |
-| 10  | 57                | ATTACK                | YES       |
+| Run | Number of messages | Decision              | Unanimous |
+|-----|--------------------|-----------------------|-----------|
+| 1   | 66                 | **RETREAT**           | YES       |
+| 2   | 119                | ATTACK / **RETREAT**  | **NO**    |
+| 3   | 57                 | ATTACK                | YES       |
+| 4   | 62                 | **RETREAT**           | YES       |
+| 5   | 99                 | ATTACK                | YES       |
+| 6   | 40                 | ATTACK / **RETREAT**  | **NO**    |
+| 7   | 103                | ATTACK                | YES       |
+| 8   | 70                 | ATTACK / **RETREAT**  | **NO**    |
+| 9   | 61                 | ATTACK                | YES       |
+| 10  | 57                 | ATTACK                | YES       |
 
 The results look alike to test case 8, but the difference here is F is one higher.
 This results in more errors in messages and the results show this.
@@ -283,15 +283,14 @@ This results in more errors in messages and the results show this.
 |  10  | LOYAL     | 2 | 8                 |
 
 
-| Traitors | Loyal Decision Correct (%) |
-|----------|----------------------------|
-|     0    |                            |
-|     1    |                            |
-|     2    |                            |
-|     3    |                            |
-|     4    |                            |
-|     5    |                            |
-
+| Traitors | Avg # messages | Loyal Decision Correct |
+|----------|----------------|------------------------|
+|     0    |      259       |           100%         |
+|     1    |      259       |           100%         |
+|     2    |      259       |              %         |
+|     3    |      259       |              %         |
+|     4    |      259       |              %         |
+|     5    |      259       |              %         |
 
 
 
