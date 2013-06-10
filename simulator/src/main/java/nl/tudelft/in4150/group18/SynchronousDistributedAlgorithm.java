@@ -92,6 +92,14 @@ public abstract class SynchronousDistributedAlgorithm<R> {
 	protected Map<Address, R> broadcast(IRequest content, int timeout, R defaultValue) {
 		return node.broadcast(content, timeout, defaultValue);
 	}
+	
+	protected int getSentMessages() {
+		return node.getSentMessages();
+	}
+	
+	protected void resetSentMessages() {
+		node.resetSentMessages();
+	}
 
 	/**
 	 * @return	The {@link Address} of this local machine.

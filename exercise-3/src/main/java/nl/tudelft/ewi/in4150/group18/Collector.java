@@ -25,27 +25,29 @@ public class Collector {
 	
 	private final Object lock = new Object();
 	private final AtomicReference<Address> localAddress = new AtomicReference<>();
-	private final String type;
+	private final Class<?> type;
 	
 	private volatile Node root = null;
 
-	public Collector(String type) {
+	public Collector(Class<?> type) {
 		this.type = type;
 	}
 	
 	public void collect(Address local, Type value, List<Address> path) {
 		localAddress.compareAndSet(null, local);
 		synchronized (lock) {
-			if (future.get() != null) {
-				future.get().cancel(true);
+			if (type.getSimpleName().equals(Lieutenant.class.getSimpleName())) {
+				if (future.get() != null) {
+					future.get().cancel(true);
+				}
+				future.set(executor.schedule(new Runnable() {
+					@Override
+					public void run() {
+						log.info("{} - ({}) - I decided to: {}", localAddress.get(), type.getSimpleName(), calculateMajority());
+						clear();
+					}
+				}, 1000, TimeUnit.MILLISECONDS));
 			}
-			future.set(executor.schedule(new Runnable() {
-				@Override
-				public void run() {
-					log.info("{} - ({}) - I decided to: {}", localAddress.get(), type, calculateMajority());
-					clear();
-				}}, 1000, TimeUnit.MILLISECONDS));
-			
 			
 			if (root == null) {
 				Address key = path.get(0);

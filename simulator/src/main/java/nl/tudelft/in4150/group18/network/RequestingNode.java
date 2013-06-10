@@ -15,6 +15,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import nl.tudelft.in4150.group18.common.IRemoteRequest;
 import nl.tudelft.in4150.group18.common.IRemoteRequest.IRequest;
@@ -42,7 +43,8 @@ public class RequestingNode<I extends IRemoteRequest<M, R>, M extends IRequest, 
 	private static final Logger log = LoggerFactory.getLogger(RequestingNode.class);
 	
 	private final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(10);
-
+	private static final AtomicInteger sent = new AtomicInteger();
+	
 	private final Receiver receiver;
 	private final Map<Address, RemoteNode<I>> remotes;
 	private final boolean localOnly;
@@ -145,7 +147,8 @@ public class RequestingNode<I extends IRemoteRequest<M, R>, M extends IRequest, 
 		waitUntilAllowedToSend();
 		
 		try {
-			log.info(getLocalAddress() + " - Sending {}: {} to: {}", message.getClass().getSimpleName(), message, to);
+			log.debug(getLocalAddress() + " - Sending {}: {} to: {}", message.getClass().getSimpleName(), message, to);
+			sent.incrementAndGet();
 			return getRemote(to).onRequest(message, getLocalAddress());
 		}
 		catch (RemoteException e) {
@@ -195,6 +198,7 @@ public class RequestingNode<I extends IRemoteRequest<M, R>, M extends IRequest, 
 				}
 			} 
 			catch (Exception e) {
+				log.warn("{} - Detected timeout sending message to: {}", getLocalAddress(), address);
 				responses.put(address, defaultValue);
 			}
 			notResponded.remove(address);
@@ -211,6 +215,14 @@ public class RequestingNode<I extends IRemoteRequest<M, R>, M extends IRequest, 
 	 */
 	public Map<Address, R> broadcast(M message, int timeout, R defaultValue) {
 		return multicast(message, listRemoteAddresses(), timeout, defaultValue);
+	}
+	
+	public int getSentMessages() {
+		return sent.get();
+	}
+	
+	public void resetSentMessages() {
+		sent.set(0);
 	}
 	
 	/**

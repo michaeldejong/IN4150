@@ -37,6 +37,10 @@ public class MainUI<R> extends JFrame {
 	private final LocalAddressPanel myAddressPanel;
 	private final NodeController<R> main;
 	private final JTextArea remotesPanel;
+
+	private JButton autoDetect;
+
+	private JButton add;
 	
 	public MainUI(boolean localOnly, InetAddress localAddress, SynchronousDistributedAlgorithm<R> algorithm) throws IOException {
 		setTitle("IN4150: Distributed algorithms - Group 18");
@@ -64,6 +68,8 @@ public class MainUI<R> extends JFrame {
 				});
 			}
 		}, 1000, 1000);
+		
+		main.autoDetectRemotes();
 	}
 	
 	private void renderUI() {
@@ -93,7 +99,7 @@ public class MainUI<R> extends JFrame {
 				.addComponent(scrollPane)
 				.addGap(10));
 		
-		final JButton autoDetect = new JButton("Auto-detect remotes");
+		autoDetect = new JButton("Auto-detect remotes");
 		autoDetect.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -101,7 +107,7 @@ public class MainUI<R> extends JFrame {
 			}
 		});
 		
-		final JButton add = new JButton("Connect to node");
+		add = new JButton("Connect to node");
 		add.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -113,9 +119,7 @@ public class MainUI<R> extends JFrame {
 		start.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				autoDetect.setEnabled(false);
-				add.setEnabled(false);
-				main.start();
+				start();
 			}
 		});
 		
@@ -178,6 +182,12 @@ public class MainUI<R> extends JFrame {
 			builder.append(" - " + address.getHostAddress() + ":" + address.getPort() + "\n");
 		}
 		remotesPanel.setText(builder.toString());
+	}
+
+	public void start() {
+		autoDetect.setEnabled(false);
+		add.setEnabled(false);
+		main.start();
 	}
 
 }

@@ -14,28 +14,36 @@ public class Main {
 
 	private static final Logger log = LoggerFactory.getLogger(Main.class);
 	
-	private static final int GENERALS = 15;
+	private static final int GENERALS = 10;
+	
+	private static final boolean COMMANDER_IS_LOYAL = false;
 	private static final int FAULTY = 0;
-	private static final int TRAITORS = 4;
-	private static final int MAX_FAULTS = 3;
+	private static final int TRAITORS = 5;
+	private static final int MAX_FAULTS = 2;
 	
 	private static final ThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(GENERALS);
 	
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, InterruptedException {
 		if (args.length == 0) {
-			run(GENERALS, FAULTY, TRAITORS, MAX_FAULTS);
+			run(GENERALS, COMMANDER_IS_LOYAL, FAULTY, TRAITORS, MAX_FAULTS);
 		}
 		else {
 			start(args, MAX_FAULTS);
 		}
 	}
 	
-	public static void run(int generals, int faulty, int traitors, int maxFaults) throws IOException {
+	public static void run(int generals, boolean commanderIsLoyal, int faulty, int traitors, int maxFaults) throws IOException {
 		if (generals < 3 * (faulty + traitors)) {
 			log.warn("Too many traitors or faulty processes to come to concensus!");
 		}
 		
-		startThreaded(new String[] { "--ui", "--local", "--default:attack" }, maxFaults);
+		if (commanderIsLoyal) {
+			startThreaded(new String[] { "--ui", "--local", "--default:attack" }, maxFaults);
+		}
+		else {
+			startThreaded(new String[] { "--ui", "--local", "--default:attack", "--traitor" }, maxFaults);
+			traitors--;
+		}
 		
 		for (int i = 1; i < GENERALS; i++) {
 			if (faulty > 0) {

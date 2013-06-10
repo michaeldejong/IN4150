@@ -23,17 +23,19 @@ public class Lieutenant extends SynchronousDistributedAlgorithm<Type> {
 	private final Collector collector;
 	
 	private int maximumFaults = 1;
-	private int timeout = 100;
+	private int timeout = 10000;
 
 	public Lieutenant(Type defaultCommand) {
 		this.defaultCommand = defaultCommand;
-		this.collector = new Collector(getClass().getSimpleName());
+		this.collector = new Collector(getClass());
 	}
 	
 	@Override
 	public void start() {
+		resetSentMessages();
 		log.info(getLocalAddress() + " - (COMMANDER) - I'm ordering: " + defaultCommand);
 		broadcast(new Command(maximumFaults, defaultCommand, Lists.newArrayList(getLocalAddress())), timeout, defaultCommand);
+		log.info("A total of {} messages was sent!", getSentMessages());
 	}
 
 	@Override
@@ -81,7 +83,8 @@ public class Lieutenant extends SynchronousDistributedAlgorithm<Type> {
 			int maximumFaults = message.getMaximumFaults() - 1;
 			Type content = message.getType();
 			
-			Map<Address, Type> responses = multicast(new Command(maximumFaults, content, path), remaining, timeout, defaultCommand);
+			int modifiedTimeout = (int) (timeout * Math.pow(0.5, path.size()));
+			Map<Address, Type> responses = multicast(new Command(maximumFaults, content, path), remaining, modifiedTimeout, defaultCommand);
 			responses.put(from, message.getType());
 			order = majority(responses, message.getType());
 			collector.collect(getLocalAddress(), order, path);
@@ -97,14 +100,6 @@ public class Lieutenant extends SynchronousDistributedAlgorithm<Type> {
 		return maximumFaults;
 	}
 	
-	public void setTimeout(int millis) {
-		this.timeout = millis;
-	}
-	
-	public int getTimeout() {
-		return timeout;
-	}
-
 	private Type majority(Map<Address, Type> responses, Type ordered) {
 		int attack = count(responses, Type.ATTACK);
 		int retreat = count(responses, Type.RETREAT);
