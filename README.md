@@ -18,7 +18,7 @@ The Lamport, Pease and Shostak algorithm is designed for reaching consensus in a
 	3. Determine the majority of responses (attack or retreat), and return this.
 
 #### Making a decision
-As soon as all the messages have been sent (or timed-out), it is time to decide on what all the loyal lieutenants should do (attack or retreat). To ensure that they all reach the same decision, each lieutentant records all received and sent messages in a tree format using the path variable found in each message. By reducing this tree recursively we can decide on a single value (attack or retreat). It's guaranteed that all loyal lieutenants will reach this same value.
+As soon as all the messages have been sent (or timed-out), it is time to decide on what all the loyal lieutenants should do (attack or retreat). To ensure that they all reach the same decision, each lieutentant records all received and sent messages in a tree format using the path variable found in each message. By reducing this tree recursively from the leaves up to the root node we can decide on a single value (attack or retreat). It's guaranteed that all loyal lieutenants will reach this same value as long as there are less than 1/3 of traitors or faulty processes.
 
 ### Test cases
 
@@ -314,32 +314,36 @@ The percentage is the amount of loyal lieutenants that came to the correct decis
 #### Test case 12
 | Runs | Commander | F | Loyal lieutenants |
 |------|-----------|---|-------------------|
-|  10  | LOYAL     | 2 | 16                 |
+|  10  | LOYAL     | 2 | 16                |
 
 
 | Faulties | Loyal Decision Correct (%) |
 |----------|----------------------------|
-|     0    |                %           |
-|     2    |                %           |
-|     4    |                %           |
-|     8    |                %           |
+|     0    |            100 %           |
+|     2    |            100 %           |
+|     4    |            100 %           |
+|     8    |            100 %           |
 
 
 
 #### Test case 13
+
 | Commander | Loyal lieutenants | Traitors | Faulties |
 |-----------|-------------------|----------|----------|
-| LOYAL     |       24          |     1    |     0    |
+| LOYAL     |       10          |     1    |     0    |
 
 
-| F | Time to decision (ms) | Slowdown |
+| F | Messaging phase (ms)  | Messages |
 |---|-----------------------|----------|
-| 0 |              ms       |      x   |
-| 1 |              ms       |      x   |
-| 2 |              ms       |      x   |
-| 3 |              ms       |      x   |
-| 4 |              ms       |      x   |
+| 0 |          116          | 9        |
+| 1 |          562          | 81       |
+| 2 |        1,335          | 585      |
+| 3 |        6,424          | 3340*    |
+| 4 | RMI communication failures      ||
 
+![scalability](https://github.com/michaeldejong/IN4150/blob/master/images/scalability.png?raw=true)
+
+When F = 4 there are just too many messages being sent around that the Java's RMI service stops functioning. Remote procedure calls start blocking and quickly tie up all available threads internally which prevents the algorithm from functioning correctly. Trough trial and error we've established that with 10 generals the highest `f` value that works is 3.
 
 ### Conclusion
 
