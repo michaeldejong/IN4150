@@ -14,10 +14,10 @@ public class Main {
 
 	private static final Logger log = LoggerFactory.getLogger(Main.class);
 	
-	private static final int GENERALS = 4;
-	private static final int FAULTY = 0;
-	private static final int TRAITORS = 1;
-	private static final int MAX_FAULTS = 1;
+	private static final int GENERALS = 7;
+	private static final int FAULTY = 4;
+	private static final int TRAITORS = 0;
+	private static final int MAX_FAULTS = 2;
 	
 	private static final ThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(GENERALS);
 	

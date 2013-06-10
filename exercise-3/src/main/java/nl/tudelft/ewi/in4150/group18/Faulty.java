@@ -19,21 +19,13 @@ public class Faulty extends Lieutenant {
 			int maximumFaults = command.getMaximumFaults();
 			List<Address> path = command.getPath();
 			
-			if (Math.random() < 0.4) {
-				maximumFaults--;
-			}
-			
-			if (Math.random() < 0.4) {
-				path.remove(0);
-			}
-			
 			Type content = command.getType();
 			
 			if (Math.random() < 0.50) { // reverse order
 				content = command.getType().opposite();
 			} 
 			
-			if (Math.random() < 0.1) {
+			if (Math.random() < 0.5) {
 				return super.onRequest(new Command(maximumFaults, content, path), from);
 			}
 		}
