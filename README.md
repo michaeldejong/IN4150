@@ -46,6 +46,8 @@ Traitors will not drop messages and screw up message parameters, like faulty pro
 |-----------|---|-------------------|----------|--------|-------------------|
 | LOYAL     | 1 | 1                 | 1        | 0      | 4                 |
 
+![graph1](https://github.com/michaeldejong/IN4150/blob/master/images/test1to8.PNG?raw=true)
+
 | Run | Number of message | Decision | Unanimous |
 |-----|-------------------|----------|-----------|
 | 1   | 4                 | ATTACK   | YES       |
@@ -60,7 +62,6 @@ Traitors will not drop messages and screw up message parameters, like faulty pro
 | 10  | 4                 | ATTACK   | YES       |
 
 All the results are unanimous. The amount of traitors (1) is a third of everybody (1 loyal lieutenant and 1 traitor) but since we only look at the decision of loyal lieutenants the results are unanimous and correct.
-![graph1](https://github.com/michaeldejong/IN4150/blob/master/images/test1to8.PNG?raw=true)
 
 
 #### Test case 2
@@ -68,6 +69,8 @@ All the results are unanimous. The amount of traitors (1) is a third of everybod
 | Commander | F | Loyal lieutenants | Traitors | Faulty | Expected messages |
 |-----------|---|-------------------|----------|--------|-------------------|
 | TRAITOR   | 1 | 2                 | 0        | 0      | 4                 |
+
+![graph2](https://github.com/michaeldejong/IN4150/blob/master/images/test1to8.PNG?raw=true)
 
 | Run | Number of message | Decision | Unanimous |
 |-----|-------------------|----------|-----------|
@@ -83,7 +86,6 @@ All the results are unanimous. The amount of traitors (1) is a third of everybod
 | 10  | 4                 | RETREAT  | YES       |
 
 All the results are unanimous and correct since there are no traitors or faulties and the algorithm works.
-![graph2](https://github.com/michaeldejong/IN4150/blob/master/images/test1to8.PNG?raw=true)
 
 
 #### Test case 3
@@ -91,6 +93,8 @@ All the results are unanimous and correct since there are no traitors or faultie
 | Commander | F | Loyal lieutenants | Traitors | Faulty | Expected messages |
 |-----------|---|-------------------|----------|--------|-------------------|
 | LOYAL     | 1 | 2                 | 1        | 0      | 9                 |
+
+![graph3](https://github.com/michaeldejong/IN4150/blob/master/images/test1to8.PNG?raw=true)
 
 | Run | Number of message | Decision | Unanimous |
 |-----|-------------------|----------|-----------|
@@ -107,7 +111,6 @@ All the results are unanimous and correct since there are no traitors or faultie
 
 All the results are unanimous and correct because the algorithm can handle up to a third of everybody to not be loyal.
 It is 3-1 loyal vs. not loyal in this case (1 traitor).
-![graph3](https://github.com/michaeldejong/IN4150/blob/master/images/test1to8.PNG?raw=true)
 
 
 #### Test case 4
@@ -115,6 +118,8 @@ It is 3-1 loyal vs. not loyal in this case (1 traitor).
 | Commander | F | Loyal lieutenants | Traitors | Faulty | Expected messages |
 |-----------|---|-------------------|----------|--------|-------------------|
 | LOYAL     | 1 | 2                 | 0        | 1      | 7-9               |
+
+![graph4](https://github.com/michaeldejong/IN4150/blob/master/images/test1to8.PNG?raw=true)
 
 | Run | Number of message | Decision | Unanimous |
 |-----|-------------------|----------|-----------|
@@ -131,7 +136,6 @@ It is 3-1 loyal vs. not loyal in this case (1 traitor).
 
 All the results are unanimous and correct because the algorithm can handle up to a third of everybody to not be loyal.
 It is 3-1 loyal vs. not loyal in this case (1 faulty).
-![graph4](https://github.com/michaeldejong/IN4150/blob/master/images/test1to8.PNG?raw=true)
 
 
 #### Test case 5
@@ -139,6 +143,8 @@ It is 3-1 loyal vs. not loyal in this case (1 faulty).
 | Commander | F | Loyal lieutenants | Traitors | Faulty | Expected messages |
 |-----------|---|-------------------|----------|--------|-------------------|
 | LOYAL     | 1 | 3                 | 2        | 0      | 25                |
+
+![graph5](https://github.com/michaeldejong/IN4150/blob/master/images/test1to8.PNG?raw=true)
 
 | Run | Number of message | Decision | Unanimous |
 |-----|-------------------|----------|-----------|
@@ -156,7 +162,6 @@ It is 3-1 loyal vs. not loyal in this case (1 faulty).
 These results are notable since the algorithm is not guaranteed to be correct at or beyond a third of everybody not being loyal.
 It is 4-2 loyal vs. not loyal in this case, so exactly a third is not loyal (traitors in this case).
 What happens in this case depends on the implementation of the traitor algorithm.
-![graph5](https://github.com/michaeldejong/IN4150/blob/master/images/test1to8.PNG?raw=true)
 
 
 #### Test case 6
@@ -164,6 +169,8 @@ What happens in this case depends on the implementation of the traitor algorithm
 | Commander | F | Loyal lieutenants | Traitors | Faulty | Expected messages |
 |-----------|---|-------------------|----------|--------|-------------------|
 | LOYAL     | 1 | 3                 | 0        | 2      | 17-25             |
+
+![graph6](https://github.com/michaeldejong/IN4150/blob/master/images/test1to8.PNG?raw=true)
 
 | Run | Number of message | Decision | Unanimous |
 |-----|-------------------|----------|-----------|
@@ -180,7 +187,6 @@ What happens in this case depends on the implementation of the traitor algorithm
 
 All the results are unanimous and correct because the algorithm can handle up to a third of everybody to not be loyal.
 It is 4-2 loyal vs. not loyal in this case (2 faulty).
-![graph6](https://github.com/michaeldejong/IN4150/blob/master/images/test1to8.PNG?raw=true)
 
 
 #### Test case 7
@@ -188,6 +194,8 @@ It is 4-2 loyal vs. not loyal in this case (2 faulty).
 | Commander | F | Loyal lieutenants | Traitors | Faulty | Expected messages |
 |-----------|---|-------------------|----------|--------|-------------------|
 | LOYAL     | 1 | 2                 | 0        | 3      | 13-25             |
+
+![graph7](https://github.com/michaeldejong/IN4150/blob/master/images/test1to8.PNG?raw=true)
 
 | Run | Number of message | Decision | Unanimous |
 |-----|-------------------|----------|-----------|
@@ -206,7 +214,6 @@ These results are notable since the algorithm is not guaranteed to be correct at
 It is 3-3 loyal vs. not loyal in this case, so exactly half is not loyal (faulty processes in this case).
 What happens in this case is a matter of chance, implemented with randomization in the faulty algorithm.
 The amount of messages is varies a lot conseqently.
-![graph7](https://github.com/michaeldejong/IN4150/blob/master/images/test1to8.PNG?raw=true)
 
 
 #### Test case 8
@@ -214,6 +221,8 @@ The amount of messages is varies a lot conseqently.
 | Commander | F | Loyal lieutenants | Traitors | Faulty | Expected messages |
 |-----------|---|-------------------|----------|--------|-------------------|
 | LOYAL     | 1 | 2                 | 0        | 4      | 16-36             |
+
+![graph8](https://github.com/michaeldejong/IN4150/blob/master/images/test8.PNG?raw=true)
 
 | Run | Number of message | Decision              | Unanimous |
 |-----|-------------------|-----------------------|-----------|
@@ -232,7 +241,6 @@ These results are expected since the algorithm is not guaranteed to be correct a
 It is 3-4 loyal vs. not loyal in this case so exactly half is not loyal (faulty processes in this case).
 What happens in this case is a matter of chance, implemented with randomization in the faulty algorithm.
 The results represent this probability well.
-![graph8](https://github.com/michaeldejong/IN4150/blob/master/images/test8.PNG?raw=true)
 
 
 #### Test case 9
@@ -240,6 +248,8 @@ The results represent this probability well.
 | Commander | F | Loyal lieutenants | Traitors | Faulty | Expected messages |
 |-----------|---|-------------------|----------|--------|-------------------|
 | LOYAL     | 2 | 2                 | 0        | 4      | 24-156            |
+
+![graph9](https://github.com/michaeldejong/IN4150/blob/master/images/test9.PNG?raw=true)
 
 | Run | Number of message | Decision              | Unanimous |
 |-----|-------------------|-----------------------|-----------|
@@ -256,7 +266,6 @@ The results represent this probability well.
 
 The results look alike to test case 8, but the difference here is F is one higher.
 This results in more errors in messages and the results show this.
-![graph9](https://github.com/michaeldejong/IN4150/blob/master/images/test9.PNG?raw=true)
 
 
 #### Test case 10
