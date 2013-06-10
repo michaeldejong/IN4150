@@ -36,7 +36,7 @@ import com.google.common.collect.Sets;
  */
 public class MessagingNode<I extends IRemoteMessage<M>, M extends IMessage> {
 	
-	private static final Range<Integer> PORT_RANGE = Range.closed(1100, 1200);
+	private static final Range<Integer> PORT_RANGE = Range.closed(1100, 1111);
 	private static final Logger log = LoggerFactory.getLogger(MessagingNode.class);
 	
 	private final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
