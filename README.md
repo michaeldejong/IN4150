@@ -34,6 +34,10 @@ As soon as all the messages have been sent (or timed-out), it is time to decide 
 | 8    | LOYAL     | 1 | 2                 | 0        | 4      | 16-36             |
 | 9    | LOYAL     | 2 | 2                 | 0        | 4      | 24-156            |
 
+In the following 9 testcases the amount of messages and decision is shown.
+The amount of messages will vary if faulty processes are in the mix.
+Traitors will not drop messages and screw up message parameters, like faulty processes do, other than the actual command.
+
 ### Results
 
 #### Test case 1
@@ -150,7 +154,7 @@ It is 3-1 loyal vs. not loyal in this case (1 faulty).
 | 10  | 25                | ATTACK   | YES       |
 
 These results are notable since the algorithm is not guaranteed to be correct at or beyond a third of everybody not being loyal.
-It is 4-2 loyal vs. not loyal in this case zo exactly a third is not loyal (traitor in this case).
+It is 4-2 loyal vs. not loyal in this case, so exactly a third is not loyal (traitors in this case).
 What happens in this case depends on the implementation of the traitor algorithm.
 ![graph5](https://github.com/michaeldejong/IN4150/blob/master/images/test1to8.PNG?raw=true)
 
@@ -174,6 +178,8 @@ What happens in this case depends on the implementation of the traitor algorithm
 | 9   | 25                | ATTACK   | YES       |
 | 10  | 21                | ATTACK   | YES       |
 
+All the results are unanimous and correct because the algorithm can handle up to a third of everybody to not be loyal.
+It is 4-2 loyal vs. not loyal in this case (2 faulty).
 ![graph6](https://github.com/michaeldejong/IN4150/blob/master/images/test1to8.PNG?raw=true)
 
 
@@ -196,6 +202,10 @@ What happens in this case depends on the implementation of the traitor algorithm
 | 9   | 25                | ATTACK   | YES       |
 | 10  | 17                | ATTACK   | YES       |
 
+These results are notable since the algorithm is not guaranteed to be correct at or beyond a third of everybody not being loyal.
+It is 3-3 loyal vs. not loyal in this case, so exactly half is not loyal (faulty processes in this case).
+What happens in this case is a matter of chance, implemented with randomization in the faulty algorithm.
+The amount of messages is varies a lot conseqently.
 ![graph7](https://github.com/michaeldejong/IN4150/blob/master/images/test1to8.PNG?raw=true)
 
 
@@ -218,6 +228,10 @@ What happens in this case depends on the implementation of the traitor algorithm
 | 9   | 26                | ATTACK                | YES       |
 | 10  | 31                | ATTACK                | YES       |
 
+These results are expected since the algorithm is not guaranteed to be correct at or beyond a third of everybody not being loyal.
+It is 3-4 loyal vs. not loyal in this case so exactly half is not loyal (faulty processes in this case).
+What happens in this case is a matter of chance, implemented with randomization in the faulty algorithm.
+The results represent this probability well.
 ![graph8](https://github.com/michaeldejong/IN4150/blob/master/images/test8.PNG?raw=true)
 
 
@@ -240,6 +254,8 @@ What happens in this case depends on the implementation of the traitor algorithm
 | 9   | 61                | ATTACK                | YES       |
 | 10  | 57                | ATTACK                | YES       |
 
+The results look alike to test case 8, but the difference here is F is one higher.
+This results in more errors in messages and the results show this.
 ![graph9](https://github.com/michaeldejong/IN4150/blob/master/images/test9.PNG?raw=true)
 
 
