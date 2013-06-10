@@ -235,24 +235,68 @@ As soon as all the messages have been sent (or timed-out), it is time to decide 
 
 
 #### Test case 10
-| Commander | F | Loyal lieutenants |
-|-----------|---|-------------------|
-| LOYAL     | 2 | 8                 |
+| Runs | Commander | F | Loyal lieutenants |
+|------|-----------|---|-------------------|
+|  10  | LOYAL     | 2 | 8                 |
 
 
-| Run | Traitors | Faulties | Decision             | Unanimous |
-|-----|----------|----------|----------------------|-----------|
-|  1  |     0    |     0    | ATTACK / **RETREAT** | **NO**    |
-|  2  |    1/4   |     0    | ATTACK / **RETREAT** | **NO**    |
-|  3  |    1/3   |     0    | ATTACK / **RETREAT** | **NO**    |
-|  4  |     0    |    1/4   | ATTACK / **RETREAT** | **NO**    |
-|  5  |     0    |    1/4   | ATTACK / **RETREAT** | **NO**    |
-|  6  |     0    |    1/4   | ATTACK / **RETREAT** | **NO**    |
-|  7  |     0    |    1/3   | ATTACK / **RETREAT** | **NO**    |
-|  8  |     0    |    1/3   | ATTACK / **RETREAT** | **NO**    |
-|  9  |     0    |    1/3   | ATTACK / **RETREAT** | **NO**    |
-| 10  |    1/4   |    1/4   | ATTACK / **RETREAT** | **NO**    |
+| Traitors | Loyal Decision Correct (%) |
+|----------|----------------------------|
+|     0    |                            |
+|     1    |                            |
+|     2    |                            |
+|     3    |                            |
+|     4    |                            |
+|     5    |                            |
 
+
+
+
+#### Test case 11
+| Runs | Commander | F | Loyal lieutenants |
+|------|-----------|---|-------------------|
+|  10  | LOYAL     | 2 | 8                 |
+
+
+| Faulties | Loyal Decision Correct (%) |
+|----------|----------------------------|
+|     0    |                            |
+|     1    |                            |
+|     2    |                            |
+|     3    |                            |
+|     4    |                            |
+|     5    |                            |
+
+
+
+#### Test case 12
+| Runs | Commander | F | Loyal lieutenants |
+|------|-----------|---|-------------------|
+|  10  | LOYAL     | 2 | 16                 |
+
+
+| Faulties | Loyal Decision Correct (%) |
+|----------|----------------------------|
+|     0    |                            |
+|     2    |                            |
+|     4    |                            |
+|     8    |                            |
+
+
+
+#### Test case 13
+| Commander | Loyal lieutenants | Traitors | Faulties |
+|-----------|-------------------|----------|----------|
+| LOYAL     |       24          |          |          |
+
+
+| F | Time to decision (ms) |
+|-- |-----------------------|
+| 0 |                       |
+| 1 |                       |
+| 2 |                       |
+| 3 |                       |
+| 4 |                       |
 
 
 ### Conclusion
