@@ -290,13 +290,13 @@ As soon as all the messages have been sent (or timed-out), it is time to decide 
 | LOYAL     |       24          |     1    |     0    |
 
 
-| F | Time to decision (ms) |
-|---|-----------------------|
-| 0 |              ms       |
-| 1 |              ms       |
-| 2 |              ms       |
-| 3 |              ms       |
-| 4 |              ms       |
+| F | Time to decision (ms) | Slowdown |
+|---|-----------------------|----------|
+| 0 |              ms       |      x   |
+| 1 |              ms       |      x   |
+| 2 |              ms       |      x   |
+| 3 |              ms       |      x   |
+| 4 |              ms       |      x   |
 
 
 ### Conclusion
