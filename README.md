@@ -46,6 +46,7 @@ Traitors will not drop messages and screw up message parameters, like faulty pro
 |-----------|---|-------------------|----------|--------|-------------------|
 | LOYAL     | 1 | 1                 | 1        | 0      | 4                 |
 
+#####Unanimous
 ![graph1](https://github.com/michaeldejong/IN4150/blob/master/images/test1to8.PNG?raw=true)
 
 | Run | Number of message | Decision | Unanimous |
@@ -70,6 +71,7 @@ All the results are unanimous. The amount of traitors (1) is a third of everybod
 |-----------|---|-------------------|----------|--------|-------------------|
 | TRAITOR   | 1 | 2                 | 0        | 0      | 4                 |
 
+#####Unanimous
 ![graph2](https://github.com/michaeldejong/IN4150/blob/master/images/test1to8.PNG?raw=true)
 
 | Run | Number of message | Decision | Unanimous |
@@ -94,6 +96,7 @@ All the results are unanimous and correct since there are no traitors or faultie
 |-----------|---|-------------------|----------|--------|-------------------|
 | LOYAL     | 1 | 2                 | 1        | 0      | 9                 |
 
+#####Unanimous
 ![graph3](https://github.com/michaeldejong/IN4150/blob/master/images/test1to8.PNG?raw=true)
 
 | Run | Number of message | Decision | Unanimous |
@@ -119,6 +122,7 @@ It is 3-1 loyal vs. not loyal in this case (1 traitor).
 |-----------|---|-------------------|----------|--------|-------------------|
 | LOYAL     | 1 | 2                 | 0        | 1      | 7-9               |
 
+#####Unanimous
 ![graph4](https://github.com/michaeldejong/IN4150/blob/master/images/test1to8.PNG?raw=true)
 
 | Run | Number of message | Decision | Unanimous |
@@ -144,6 +148,7 @@ It is 3-1 loyal vs. not loyal in this case (1 faulty).
 |-----------|---|-------------------|----------|--------|-------------------|
 | LOYAL     | 1 | 3                 | 2        | 0      | 25                |
 
+#####Unanimous
 ![graph5](https://github.com/michaeldejong/IN4150/blob/master/images/test1to8.PNG?raw=true)
 
 | Run | Number of message | Decision | Unanimous |
@@ -170,6 +175,7 @@ What happens in this case depends on the implementation of the traitor algorithm
 |-----------|---|-------------------|----------|--------|-------------------|
 | LOYAL     | 1 | 3                 | 0        | 2      | 17-25             |
 
+#####Unanimous
 ![graph6](https://github.com/michaeldejong/IN4150/blob/master/images/test1to8.PNG?raw=true)
 
 | Run | Number of message | Decision | Unanimous |
@@ -195,6 +201,7 @@ It is 4-2 loyal vs. not loyal in this case (2 faulty).
 |-----------|---|-------------------|----------|--------|-------------------|
 | LOYAL     | 1 | 2                 | 0        | 3      | 13-25             |
 
+#####Unanimous
 ![graph7](https://github.com/michaeldejong/IN4150/blob/master/images/test1to8.PNG?raw=true)
 
 | Run | Number of message | Decision | Unanimous |
@@ -222,6 +229,7 @@ The amount of messages is varies a lot conseqently.
 |-----------|---|-------------------|----------|--------|-------------------|
 | LOYAL     | 1 | 2                 | 0        | 4      | 16-36             |
 
+#####Unanimous
 ![graph8](https://github.com/michaeldejong/IN4150/blob/master/images/test8.PNG?raw=true)
 
 | Run | Number of message | Decision              | Unanimous |
@@ -249,6 +257,7 @@ The results represent this probability well.
 |-----------|---|-------------------|----------|--------|-------------------|
 | LOYAL     | 2 | 2                 | 0        | 4      | 24-156            |
 
+#####Unanimous
 ![graph9](https://github.com/michaeldejong/IN4150/blob/master/images/test9.PNG?raw=true)
 
 | Run | Number of message | Decision              | Unanimous |
