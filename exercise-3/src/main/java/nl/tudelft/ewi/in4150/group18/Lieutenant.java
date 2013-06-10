@@ -27,7 +27,7 @@ public class Lieutenant extends SynchronousDistributedAlgorithm<Type> {
 
 	public Lieutenant(Type defaultCommand) {
 		this.defaultCommand = defaultCommand;
-		this.collector = new Collector(getClass(), 5000);
+		this.collector = new Collector(getClass(), 1000);
 	}
 	
 	@Override

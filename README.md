@@ -302,15 +302,17 @@ This is most likely the effect of only counting the loyal lieutenants decision a
 |  10  | LOYAL     | 2 | 8                 |
 
 
-| Faulties | Loyal Decision Correct (%) |
-|----------|----------------------------|
-|     0    |                            |
-|     1    |                            |
-|     2    |                            |
-|     3    |                            |
-|     4    |                            |
-|     5    |                            |
+| Faulties | Avg # messages | Avg Loyal Decision Correct |
+|----------|----------------|----------------------------|
+|     0    |      259       |             100%           |
+|     1    |      244       |             100%           |
+|     2    |      219       |             100%           |
+|     3    |      183       |             100%           |
+|     4    |      157       |             100%           |
+|     5    |      121       |              10%           |
 
+As we saw earlier the results of faulty processes really seem too good to be true.
+Only beyond less than half of the lieutenants beying loyal and reliable the decisions become bad. 
 
 
 #### Test case 12
