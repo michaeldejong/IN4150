@@ -277,26 +277,26 @@ As soon as all the messages have been sent (or timed-out), it is time to decide 
 
 | Faulties | Loyal Decision Correct (%) |
 |----------|----------------------------|
-|     0    |                            |
-|     2    |                            |
-|     4    |                            |
-|     8    |                            |
+|     0    |                %           |
+|     2    |                %           |
+|     4    |                %           |
+|     8    |                %           |
 
 
 
 #### Test case 13
 | Commander | Loyal lieutenants | Traitors | Faulties |
 |-----------|-------------------|----------|----------|
-| LOYAL     |       24          |          |          |
+| LOYAL     |       24          |     1    |     0    |
 
 
 | F | Time to decision (ms) |
 |-- |-----------------------|
-| 0 |                       |
-| 1 |                       |
-| 2 |                       |
-| 3 |                       |
-| 4 |                       |
+| 0 |              ms       |
+| 1 |              ms       |
+| 2 |              ms       |
+| 3 |              ms       |
+| 4 |              ms       |
 
 
 ### Conclusion
