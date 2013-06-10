@@ -349,4 +349,6 @@ Only when there were more than half of faulty processes some cracks started to a
 
 In the test cases 10 to 13 we found out that the RMI system does not scale very well.
 The more messages we tried to send at the same time the worse the system responded (in a non linear way) causing RMI exceptions and timeouts in our algorithm.
-Problems already formed at F=3 for 10 nodes in total.
+Problems already formed beyond F=3 for 10 nodes in total.
+We tweaked the amount of threads that talk to RMI.
+Even with 10 threads we had hickups, but the more threads we used the more fluent it seemed to run.
