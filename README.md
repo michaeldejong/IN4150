@@ -291,7 +291,7 @@ As soon as all the messages have been sent (or timed-out), it is time to decide 
 
 
 | F | Time to decision (ms) |
-|-- |-----------------------|
+|---|-----------------------|
 | 0 |              ms       |
 | 1 |              ms       |
 | 2 |              ms       |
