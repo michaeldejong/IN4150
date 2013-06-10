@@ -55,6 +55,9 @@ As soon as all the messages have been sent (or timed-out), it is time to decide 
 | 9   | 4                 | ATTACK   | YES       |
 | 10  | 4                 | ATTACK   | YES       |
 
+![graph1](https://github.com/michaeldejong/IN4150/blob/master/images/test1to8.PNG?raw=true)
+
+
 #### Test case 2
 
 | Commander | F | Loyal lieutenants | Traitors | Faulty | Expected messages |
@@ -73,6 +76,9 @@ As soon as all the messages have been sent (or timed-out), it is time to decide 
 | 8   | 4                 | RETREAT  | YES       |
 | 9   | 4                 | RETREAT  | YES       |
 | 10  | 4                 | RETREAT  | YES       |
+
+![graph2](https://github.com/michaeldejong/IN4150/blob/master/images/test1to8.PNG?raw=true)
+
 
 #### Test case 3
 
@@ -93,6 +99,9 @@ As soon as all the messages have been sent (or timed-out), it is time to decide 
 | 9   | 9                 | ATTACK   | YES       |
 | 10  | 9                 | ATTACK   | YES       |
 
+![graph3](https://github.com/michaeldejong/IN4150/blob/master/images/test1to8.PNG?raw=true)
+
+
 #### Test case 4
 
 | Commander | F | Loyal lieutenants | Traitors | Faulty | Expected messages |
@@ -111,6 +120,9 @@ As soon as all the messages have been sent (or timed-out), it is time to decide 
 | 8   | 9                 | ATTACK   | YES       |
 | 9   | 9                 | ATTACK   | YES       |
 | 10  | 7                 | ATTACK   | YES       |
+
+![graph4](https://github.com/michaeldejong/IN4150/blob/master/images/test1to8.PNG?raw=true)
+
 
 #### Test case 5
 
@@ -131,6 +143,9 @@ As soon as all the messages have been sent (or timed-out), it is time to decide 
 | 9   | 25                | ATTACK   | YES       |
 | 10  | 25                | ATTACK   | YES       |
 
+![graph5](https://github.com/michaeldejong/IN4150/blob/master/images/test1to8.PNG?raw=true)
+
+
 #### Test case 6
 
 | Commander | F | Loyal lieutenants | Traitors | Faulty | Expected messages |
@@ -149,6 +164,9 @@ As soon as all the messages have been sent (or timed-out), it is time to decide 
 | 8   | 21                | ATTACK   | YES       |
 | 9   | 25                | ATTACK   | YES       |
 | 10  | 21                | ATTACK   | YES       |
+
+![graph6](https://github.com/michaeldejong/IN4150/blob/master/images/test1to8.PNG?raw=true)
+
 
 #### Test case 7
 
@@ -169,6 +187,9 @@ As soon as all the messages have been sent (or timed-out), it is time to decide 
 | 9   | 25                | ATTACK   | YES       |
 | 10  | 17                | ATTACK   | YES       |
 
+![graph7](https://github.com/michaeldejong/IN4150/blob/master/images/test1to8.PNG?raw=true)
+
+
 #### Test case 8
 
 | Commander | F | Loyal lieutenants | Traitors | Faulty | Expected messages |
@@ -187,6 +208,9 @@ As soon as all the messages have been sent (or timed-out), it is time to decide 
 | 8   | 31                | ATTACK / **RETREAT**  | **NO**    |
 | 9   | 26                | ATTACK                | YES       |
 | 10  | 31                | ATTACK                | YES       |
+
+![graph8](https://github.com/michaeldejong/IN4150/blob/master/images/test8.PNG?raw=true)
+
 
 #### Test case 9
 
@@ -207,6 +231,9 @@ As soon as all the messages have been sent (or timed-out), it is time to decide 
 | 9   | 61                | ATTACK                | YES       |
 | 10  | 57                | ATTACK                | YES       |
 
+![graph9](https://github.com/michaeldejong/IN4150/blob/master/images/test9.PNG?raw=true)
+
+
 #### Test case 10
 | Commander | F | Loyal lieutenants |
 |-----------|---|-------------------|
@@ -216,12 +243,15 @@ As soon as all the messages have been sent (or timed-out), it is time to decide 
 | Run | Traitors | Faulties | Decision             | Unanimous |
 |-----|----------|----------|----------------------|-----------|
 |  1  |     0    |     0    | ATTACK / **RETREAT** | **NO**    |
-|  1  |     0    |     0    | ATTACK / **RETREAT** | **NO**    |
-|  1  |     0    |     0    | ATTACK / **RETREAT** | **NO**    |
-|  1  |     0    |     0    | ATTACK / **RETREAT** | **NO**    |
-|  1  |     0    |     0    | ATTACK / **RETREAT** | **NO**    ||  1  |     0    |     0    | ATTACK / **RETREAT** | **NO**    |
-
-
+|  2  |    1/4   |     0    | ATTACK / **RETREAT** | **NO**    |
+|  3  |    1/3   |     0    | ATTACK / **RETREAT** | **NO**    |
+|  4  |     0    |    1/4   | ATTACK / **RETREAT** | **NO**    |
+|  5  |     0    |    1/4   | ATTACK / **RETREAT** | **NO**    |
+|  6  |     0    |    1/4   | ATTACK / **RETREAT** | **NO**    |
+|  7  |     0    |    1/3   | ATTACK / **RETREAT** | **NO**    |
+|  8  |     0    |    1/3   | ATTACK / **RETREAT** | **NO**    |
+|  9  |     0    |    1/3   | ATTACK / **RETREAT** | **NO**    |
+| 10  |    1/4   |    1/4   | ATTACK / **RETREAT** | **NO**    |
 
 
 
