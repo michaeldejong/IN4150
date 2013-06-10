@@ -33,6 +33,10 @@ As soon as all the messages have been sent (or timed-out), it is time to decide 
 | 7    | LOYAL     | 1 | 2                 | 0        | 3      | 13-25             |
 | 8    | LOYAL     | 1 | 2                 | 0        | 4      | 16-36             |
 | 9    | LOYAL     | 2 | 2                 | 0        | 4      | 24-156            |
+| 10   | LOYAL     | 2 | 8                 | 0-5      | 0      | 259               |
+| 11   | LOYAL     | 2 | 8                 | 0        | 0-5    | 50-259            |
+| 12   | LOYAL     | 2 | 16                | 0        | 0-8    | 50-2000           |
+| 13   | LOYAL     | 0-4 | 24              | 1        | 0      | 23-?              |
 
 In the following 9 testcases the amount of messages and decision is shown.
 The amount of messages will vary if faulty processes are in the mix.
