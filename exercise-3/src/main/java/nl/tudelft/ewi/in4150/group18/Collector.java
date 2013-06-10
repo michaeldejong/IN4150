@@ -25,8 +25,13 @@ public class Collector {
 	
 	private final Object lock = new Object();
 	private final AtomicReference<Address> localAddress = new AtomicReference<>();
+	private final String type;
 	
 	private volatile Node root = null;
+
+	public Collector(String type) {
+		this.type = type;
+	}
 	
 	public void collect(Address local, Type value, List<Address> path) {
 		localAddress.compareAndSet(null, local);
@@ -37,7 +42,7 @@ public class Collector {
 			future.set(executor.schedule(new Runnable() {
 				@Override
 				public void run() {
-					log.info("{} - I decided to: {}", localAddress.get(), calculateMajority());
+					log.info("{} - ({}) - I decided to: {}", localAddress.get(), type, calculateMajority());
 					clear();
 				}}, 1000, TimeUnit.MILLISECONDS));
 			
